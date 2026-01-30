@@ -1,0 +1,6 @@
+@TrustIdentity.AdminApi_HostAddress = http://localhost:5102
+
+GET {{TrustIdentity.AdminApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

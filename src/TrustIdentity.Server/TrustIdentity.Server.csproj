@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>TrustIdentity.Server</PackageId>
+    <Version>1.0.0</Version>
+    <Description>Complete Enterprise IAM Server - OAuth 2.0, OIDC, SAML, WS-Fed</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="LICENSE">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../TrustIdentity.Abstractions/TrustIdentity.Abstractions.csproj" />
+    <ProjectReference Include="../TrustIdentity.Core/TrustIdentity.Core.csproj" />
+    <ProjectReference Include="../TrustIdentity.Storage/TrustIdentity.Storage.csproj" />
+    <ProjectReference Include="../TrustIdentity.AspNetCore/TrustIdentity.AspNetCore.csproj" />
+    <ProjectReference Include="../TrustIdentity.AI/TrustIdentity.AI.csproj" />
+    <ProjectReference Include="../TrustIdentity.ML/TrustIdentity.ML.csproj" />
+    <ProjectReference Include="../TrustIdentity.Saml/TrustIdentity.Saml.csproj" />
+    <ProjectReference Include="../TrustIdentity.WsFederation/TrustIdentity.WsFederation.csproj" />
+    <ProjectReference Include="../TrustIdentity.ExternalProviders/TrustIdentity.ExternalProviders.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

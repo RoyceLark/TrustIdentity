@@ -1,0 +1,65 @@
+﻿@page
+@model ErrorModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <div class="display-1 text-danger mb-4"><i class="fas fa-exclamation-circle"></i></div>
+                    <h1 class="h3 mb-3 fw-bold text-dark">Administrative Error</h1>
+                    <p class="text-muted">An error occurred while processing your administrative request.</p>
+                </div>
+
+                <div class="alert alert-danger border-0 bg-danger-soft text-danger p-4 mb-4">
+                    <div class="d-flex">
+                        <i class="fas fa-bug mt-1 me-3"></i>
+                        <div>
+                            <div class="fw-bold mb-1">Processing Failed</div>
+                            <div>The system encountered an unexpected error. This has been logged for internal review.</div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model.ShowRequestId)
+                {
+                    <div class="bg-light p-3 rounded border mb-4">
+                        <span class="text-muted small text-uppercase fw-bold me-2">Request ID:</span>
+                        <code class="text-primary fw-bold">@Model.RequestId</code>
+                    </div>
+                }
+
+                <div class="d-grid gap-2">
+                    <button onclick="window.history.back()" class="btn btn-dark py-2">
+                        <i class="fas fa-arrow-left me-2"></i>Return to Previous Page
+                    </button>
+                    <a asp-page="/Dashboard" class="btn btn-outline-secondary py-2">
+                        <i class="fas fa-chart-line me-2"></i>System Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        @if (HttpContext.RequestServices.GetService<IWebHostEnvironment>()?.IsDevelopment() ?? false)
+        {
+            <div class="mt-5">
+                <div class="card border-warning">
+                    <div class="card-header bg-warning-soft text-warning fw-bold">
+                        <i class="fas fa-code me-2"></i>Development Information
+                    </div>
+                    <div class="card-body small">
+                        <p class="mb-0">Detailed exception information is available in the server logs when running in Development mode.</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .bg-danger-soft { background-color: rgba(220, 53, 69, 0.1); }
+    .bg-warning-soft { background-color: rgba(255, 193, 7, 0.1); }
+</style>

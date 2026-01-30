@@ -1,0 +1,60 @@
+@page "{id}"
+@model TrustIdentity.Admin.Pages.Users.EditModel
+@{
+    ViewData["Title"] = "Edit User - " + Model.Input.Username;
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-page="./Index">Users</a></li>
+            <li class="breadcrumb-item"><a asp-page="./Details" asp-route-id="@Model.Input.SubjectId">@Model.Input.Username</a></li>
+            <li class="breadcrumb-item active">Edit</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <h1 class="h3 mb-0">Edit User</h1>
+                    <p class="text-muted small mb-0">Update profile for <strong>@Model.Input.Username</strong></p>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <input type="hidden" asp-for="Input.SubjectId" />
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Input.Username" class="form-label fw-bold small text-uppercase"></label>
+                            <input asp-for="Input.Username" class="form-control" />
+                            <span asp-validation-for="Input.Username" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Email" class="form-label fw-bold small text-uppercase"></label>
+                            <input asp-for="Input.Email" class="form-control" />
+                            <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" asp-for="Input.IsActive">
+                                <label class="form-check-label fw-bold" asp-for="Input.IsActive"></label>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a asp-page="./Details" asp-route-id="@Model.Input.SubjectId" class="btn btn-light px-4">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-5">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

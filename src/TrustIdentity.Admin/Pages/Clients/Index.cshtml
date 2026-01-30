@@ -1,0 +1,169 @@
+@page
+@model TrustIdentity.Admin.Pages.Clients.IndexModel
+@{
+    ViewData["Title"] = "Clients";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">Clients</h1>
+            <p class="text-muted">Manage OAuth 2.0 and OpenID Connect applications</p>
+        </div>
+        <a asp-page="./Create" class="btn btn-primary d-flex align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-2" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+            </svg>
+            Create Client
+        </a>
+    </div>
+
+    <form method="post" id="bulkForm" asp-page-handler="BulkAction">
+        <div class="d-flex align-items-center mb-3">
+            <div class="input-group" style="max-width: 300px;">
+                <select name="action" class="form-select form-select-sm">
+                    <option value="">Bulk Actions...</option>
+                    <option value="delete">Delete Selected</option>
+                    <option value="enable">Enable Selected</option>
+                    <option value="disable">Disable Selected</option>
+                </select>
+                <button type="submit" class="btn btn-sm btn-outline-secondary">Apply</button>
+            </div>
+            <div class="ms-3 text-muted small" id="selectionCount"></div>
+        </div>
+
+        <div class="card border-0 shadow-sm overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th style="width: 40px;" class="px-4 py-3 border-0">
+                                <input type="checkbox" class="form-check-input" id="selectAll">
+                            </th>
+                            <th class="px-4 py-3 border-0 text-uppercase small fw-bold text-muted">Client ID</th>
+                            <th class="py-3 border-0 text-uppercase small fw-bold text-muted">Name</th>
+                            <th class="py-3 border-0 text-uppercase small fw-bold text-muted">Status</th>
+                            <th class="py-3 border-0 text-uppercase small fw-bold text-muted">Scopes</th>
+                            <th class="py-3 border-0 text-uppercase small fw-bold text-muted text-end px-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Clients.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="py-5 text-center text-muted">
+                                    <p class="mb-0">No clients found. Start by creating your first client.</p>
+                                </td>
+                            </tr>
+                        }
+                        @foreach (var client in Model.Clients)
+                        {
+                            <tr>
+                                <td class="px-4 py-3 border-top">
+                                    <input type="checkbox" name="SelectedIds" value="@client.ClientId" class="form-check-input client-select">
+                                </td>
+                                <td class="px-4 py-3 border-top">
+                                    <div class="fw-bold text-primary">@client.ClientId</div>
+                                    <div class="small text-muted">Created @client.Created.ToString("MMM dd, yyyy")</div>
+                                </td>
+                                <td class="py-3 border-top">@client.ClientName</td>
+                                <td class="py-3 border-top">
+                                    @if (client.Enabled)
+                                    {
+                                        <span class="badge rounded-pill bg-success-soft text-success px-3">
+                                            Active
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge rounded-pill bg-danger-soft text-danger px-3">
+                                            Disabled
+                                        </span>
+                                    }
+                                </td>
+                                <td class="py-3 border-top text-muted">
+                                    @client.AllowedScopesCount scope(s)
+                                </td>
+                                <td class="py-3 border-top text-end px-4">
+                                    <div class="btn-group">
+                                        <a asp-page="./Details" asp-route-id="@client.ClientId" class="btn btn-sm btn-outline-secondary">
+                                            Details
+                                        </a>
+                                        <a asp-page="./Edit" asp-route-id="@client.ClientId" class="btn btn-sm btn-outline-primary">
+                                            Edit
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-client-id="@client.ClientId">
+                                            Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="Delete">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this client? This action cannot be undone.</p>
+                    <input type="hidden" name="id" id="deleteClientId" />
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger px-4">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-success-soft { background-color: rgba(25, 135, 84, 0.1); }
+    .bg-danger-soft { background-color: rgba(220, 53, 69, 0.1); }
+    .table-hover tbody tr:hover { background-color: rgba(0, 123, 255, 0.02); }
+</style>
+
+@section Scripts {
+    <script>
+        const deleteModal = document.getElementById('deleteModal');
+        if (deleteModal) {
+            deleteModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                const clientId = button.getAttribute('data-client-id');
+                const modalInput = deleteModal.querySelector('#deleteClientId');
+                modalInput.value = clientId;
+            });
+        }
+
+        const selectAll = document.getElementById('selectAll');
+        const clientSelects = document.querySelectorAll('.client-select');
+        const countDisplay = document.getElementById('selectionCount');
+
+        if(selectAll) {
+            selectAll.addEventListener('change', function() {
+                clientSelects.forEach(cb => cb.checked = this.checked);
+                updateCount();
+            });
+        }
+        
+        clientSelects.forEach(cb => cb.addEventListener('change', updateCount));
+
+        function updateCount() {
+            const count = document.querySelectorAll('.client-select:checked').length;
+            if (countDisplay) {
+                countDisplay.textContent = count > 0 ? `${count} selected` : '';
+            }
+        }
+    </script>
+}

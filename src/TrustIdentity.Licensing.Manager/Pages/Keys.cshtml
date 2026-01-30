@@ -1,0 +1,90 @@
+@page
+@model KeysModel
+@{
+    ViewData["Title"] = "Cryptographic Keys";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-8">
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold">Cryptographic Key Lab</h1>
+            <p class="text-muted lead">Generate RSA key pairs for signing and validating licenses.</p>
+        </div>
+
+        <div class="alert bg-warning bg-opacity-10 border border-warning border-opacity-25 d-flex align-items-center mb-4 p-4">
+            <i class="fas fa-exclamation-triangle fs-3 text-warning me-3"></i>
+            <div>
+                <strong class="text-warning">Security Notice:</strong>
+                <p class="mb-0">Keys are generated locally in your browser/memory. They are not stored until you save them in your configuration. Store the Private Key in a secure vault (like Azure Key Vault) and never share it.</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header border-bottom border-secondary py-3 d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0"><i class="fas fa-lock me-2 text-primary"></i> Private Key</h4>
+                        <span class="badge bg-danger">Secret</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="small text-muted mb-3">Used by the <strong>Generator</strong> to sign new license files.</p>
+                        <textarea class="form-control bg-black text-success font-monospace mb-3" rows="10" readonly id="privKey">@Model.PrivateKey</textarea>
+                        <button class="btn btn-outline-light w-100" onclick="copyToClipboard('privKey')">
+                            <i class="fas fa-copy me-1"></i> Copy Private Key
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header border-bottom border-secondary py-3 d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0"><i class="fas fa-unlock me-2 text-primary-light"></i> Public Key</h4>
+                        <span class="badge bg-success">Public</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="small text-muted mb-3">Distribute with your <strong>Applications</strong> to verify signatures.</p>
+                        <textarea class="form-control bg-black text-success font-monospace mb-3" rows="10" readonly id="pubKey">@Model.PublicKey</textarea>
+                        <button class="btn btn-outline-light w-100" onclick="copyToClipboard('pubKey')">
+                            <i class="fas fa-copy me-1"></i> Copy Public Key
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5 glass-panel">
+            <h5>How to use these keys?</h5>
+            <ol class="mb-0">
+                <li class="mb-2">Copy the <strong>Private Key</strong> and paste it into the <code>Licensing:PrivateKey</code> setting of this Manager app.</li>
+                <li class="mb-2">Copy the <strong>Public Key</strong> and paste it into the <code>Licensing:PublicKey</code> setting of your Client/Identity Server app.</li>
+                <li>Applications can then use <code>_licenseValidationService.IsValid(out var licenseData)</code> to enforce business logic.</li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="copyToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="fas fa-check-circle me-2"></i> Key copied to clipboard!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function copyToClipboard(id) {
+            const copyText = document.getElementById(id);
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value).then(() => {
+                const toast = new bootstrap.Toast(document.getElementById('copyToast'));
+                toast.show();
+            });
+        }
+    </script>
+}

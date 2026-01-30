@@ -1,0 +1,38 @@
+﻿@page
+@model ErrorModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="auth-card">
+    <div class="auth-header" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+        <div class="auth-logo" style="background: rgba(255, 255, 255, 0.2);">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h1>System Error</h1>
+        <p>Something went wrong on our end</p>
+    </div>
+
+    <div class="auth-body text-center">
+        <div class="alert alert-danger mb-4">
+            <i class="fas fa-bug"></i>
+            <span>An error occurred while processing your request. Our technical team has been notified.</span>
+        </div>
+
+        @if (Model.ShowRequestId)
+        {
+            <div style="background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; font-family: monospace; font-size: 13px; margin-bottom: 24px;">
+                <span style="color: #64748b;">Request ID:</span> <span style="color: #0f172a; font-weight: 700;">@Model.RequestId</span>
+            </div>
+        }
+
+        <p style="color: #64748b; font-size: 14px; margin-bottom: 24px;">
+            If this problem persists, please contact our support team with the Request ID shown above.
+        </p>
+        
+        <div style="display: grid; gap: 12px;">
+            <button onclick="window.history.back()" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Go Back</button>
+            <a href="/" class="btn btn-secondary"><i class="fas fa-home"></i> Home</a>
+        </div>
+    </div>
+</div>

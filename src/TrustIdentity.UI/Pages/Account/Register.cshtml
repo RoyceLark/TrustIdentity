@@ -1,0 +1,133 @@
+@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Create Account";
+}
+
+<div class="auth-card">
+    <div class="auth-header">
+        <div class="auth-logo">
+            <i class="fas fa-user-plus"></i>
+        </div>
+        <h1>Create Account</h1>
+        <p>Join TrustIdentity to get started</p>
+    </div>
+
+    <div class="auth-body">
+        <form method="post">
+            <input type="hidden" asp-for="ReturnUrl" />
+            
+            <div class="form-group">
+                <label class="form-label" asp-for="Input.Email">Email Address</label>
+                <div class="input-icon">
+                    <i class="fas fa-envelope"></i>
+                    <input asp-for="Input.Email" 
+                           class="form-control" 
+                           placeholder="you@example.com"
+                           autocomplete="email"
+                           required />
+                </div>
+                <span asp-validation-for="Input.Email" class="text-danger small"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" asp-for="Input.Username">Username</label>
+                <div class="input-icon">
+                    <i class="fas fa-user"></i>
+                    <input asp-for="Input.Username" 
+                           class="form-control" 
+                           placeholder="Choose a username"
+                           autocomplete="username"
+                           required />
+                </div>
+                <span asp-validation-for="Input.Username" class="text-danger small"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" asp-for="Input.Password">Password</label>
+                <div class="input-icon">
+                    <i class="fas fa-lock"></i>
+                    <input asp-for="Input.Password" 
+                           type="password"
+                           class="form-control" 
+                           placeholder="At least 8 characters"
+                           autocomplete="new-password"
+                           required />
+                </div>
+                <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                <div class="password-strength" id="passwordStrength"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" asp-for="Input.ConfirmPassword">Confirm Password</label>
+                <div class="input-icon">
+                    <i class="fas fa-lock"></i>
+                    <input asp-for="Input.ConfirmPassword" 
+                           type="password"
+                           class="form-control" 
+                           placeholder="Re-enter your password"
+                           autocomplete="new-password"
+                           required />
+                </div>
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input asp-for="Input.AgreeToTerms" type="checkbox" required />
+                    <span>I agree to the <a href="/terms" class="link">Terms of Service</a> and <a href="/privacy" class="link">Privacy Policy</a></span>
+                </label>
+                <span asp-validation-for="Input.AgreeToTerms" class="text-danger small"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <div class="loading"></div>
+                <span><i class="fas fa-user-plus"></i> Create Account</span>
+            </button>
+
+            <div class="security-badge">
+                <i class="fas fa-shield-check"></i>
+                <span>Your data is encrypted and secure</span>
+            </div>
+        </form>
+    </div>
+
+    <div class="auth-footer">
+        Already have an account? <a href="/Account/Login" class="link">Sign in</a>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Password strength indicator
+        const passwordInput = document.querySelector('input[name="Input.Password"]');
+        const strengthIndicator = document.getElementById('passwordStrength');
+        
+        passwordInput?.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+            
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/\d/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+            
+            const labels = ['Weak', 'Fair', 'Good', 'Strong', 'Very Strong'];
+            const colors = ['#ef4444', '#f59e0b', '#eab308', '#10b981', '#059669'];
+            
+            strengthIndicator.textContent = password.length > 0 ? `Strength: ${labels[strength - 1] || 'Weak'}` : '';
+            strengthIndicator.style.color = colors[strength - 1] || colors[0];
+            strengthIndicator.style.fontSize = '12px';
+            strengthIndicator.style.marginTop = '4px';
+            strengthIndicator.style.fontWeight = '600';
+        });
+    </script>
+}
+
+<style>
+    .password-strength {
+        min-height: 20px;
+    }
+</style>

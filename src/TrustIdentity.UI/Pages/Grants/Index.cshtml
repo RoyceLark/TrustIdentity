@@ -1,0 +1,76 @@
+@page
+@model TrustIdentity.UI.Pages.Grants.IndexModel
+@{
+    ViewData["Title"] = "Manage Application Access";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="display-5 fw-bold">Application Access</h1>
+            <p class="text-muted">Managed apps that have access to your account data.</p>
+        </div>
+        <div class="icon-box bg-primary-soft p-3 rounded-pill">
+            <i class="bi bi-shield-check text-primary fs-3"></i>
+        </div>
+    </div>
+
+    @if (!Model.Grants.Any())
+    {
+        <div class="alert alert-info border-0 shadow-sm p-4 text-center">
+            <i class="bi bi-info-circle fs-2 d-block mb-3"></i>
+            <h4>No applications have access yet.</h4>
+            <p class="mb-0">When you sign in to external apps using TrustIdentity, they will appear here.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var grant in Model.Grants)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0 grant-card">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-4">
+                                @if (!string.IsNullOrEmpty(grant.ClientLogoUrl))
+                                {
+                                    <img src="@grant.ClientLogoUrl" alt="@grant.ClientName" class="rounded me-3" style="width: 48px; height: 48px; object-fit: contain;">
+                                }
+                                else
+                                {
+                                    <div class="bg-light rounded d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+                                        <i class="bi bi-app text-secondary fs-4"></i>
+                                    </div>
+                                }
+                                <div>
+                                    <h5 class="card-title mb-0 fw-bold">@grant.ClientName</h5>
+                                    <small class="text-muted">ID: @grant.ClientId</small>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="small text-muted mb-1">Access Granted</div>
+                                <div class="fw-medium">@grant.Created.ToString("MMM dd, yyyy")</div>
+                            </div>
+
+                            <div class="d-grid">
+                                <form asp-page-handler="Revoke" method="post">
+                                    <input type="hidden" name="clientId" value="@grant.ClientId" />
+                                    <button type="submit" class="btn btn-outline-danger btn-sm w-100 py-2 rounded-3">
+                                        <i class="bi bi-x-circle me-2"></i>Revoke Access
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .bg-primary-soft { background-color: rgba(13, 110, 253, 0.1); }
+    .grant-card { transition: transform 0.2s, shadow 0.2s; }
+    .grant-card:hover { transform: translateY(-5px); box-shadow: 0 1rem 3rem rgba(0,0,0,0.1) !important; }
+</style>

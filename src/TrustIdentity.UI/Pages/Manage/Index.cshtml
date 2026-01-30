@@ -1,0 +1,128 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Account Management";
+}
+
+<div class="auth-card" style="max-width: 800px;">
+    <div class="auth-header">
+        <div class="auth-logo">
+            <i class="fas fa-user-circle"></i>
+        </div>
+        <h1>Account Settings</h1>
+        <p>Manage your account and security</p>
+    </div>
+
+    <div class="auth-body">
+        <div style="display: grid; gap: 16px;">
+            <!-- Profile Section -->
+            <div style="padding: 20px; background: #f8fafc; border-radius: 12px;">
+                <h3 style="margin: 0 0 16px 0; font-size: 18px; color: #0f172a;">
+                    <i class="fas fa-user" style="color: #6366f1;"></i> Profile Information
+                </h3>
+                <div style="display: grid; gap: 12px;">
+                    <div>
+                        <label style="font-size: 13px; color: #64748b; font-weight: 600;">Username</label>
+                        <div style="font-size: 15px; color: #0f172a;">@Model.Username</div>
+                    </div>
+                    <div>
+                        <label style="font-size: 13px; color: #64748b; font-weight: 600;">Email</label>
+                        <div style="font-size: 15px; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                            @Model.Email
+                            @if (Model.EmailConfirmed)
+                            {
+                                <span style="background: #10b981; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">VERIFIED</span>
+                            }
+                            else
+                            {
+                                <span style="background: #f59e0b; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">UNVERIFIED</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <a href="/Manage/Profile" class="btn btn-secondary" style="margin-top: 12px; width: auto; display: inline-flex;">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </a>
+            </div>
+
+            <!-- Security Section -->
+            <div style="padding: 20px; background: #f8fafc; border-radius: 12px;">
+                <h3 style="margin: 0 0 16px 0; font-size: 18px; color: #0f172a;">
+                    <i class="fas fa-shield-alt" style="color: #6366f1;"></i> Security
+                </h3>
+                <div style="display: grid; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 600; color: #0f172a;">Password</div>
+                            <div style="font-size: 13px; color: #64748b;">Last changed: Never</div>
+                        </div>
+                        <a href="/Manage/ChangePassword" class="btn btn-secondary" style="width: auto;">Change</a>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 600; color: #0f172a;">Two-Factor Authentication</div>
+                            <div style="font-size: 13px; color: #64748b;">
+                                @if (Model.TwoFactorEnabled)
+                                {
+                                    <span style="color: #10b981;">Enabled</span>
+                                }
+                                else
+                                {
+                                    <span style="color: #ef4444;">Disabled</span>
+                                }
+                            </div>
+                        </div>
+                        <a href="/Manage/TwoFactor" class="btn btn-secondary" style="width: auto;">
+                            @(Model.TwoFactorEnabled ? "Manage" : "Enable")
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- External Logins -->
+            <div style="padding: 20px; background: #f8fafc; border-radius: 12px;">
+                <h3 style="margin: 0 0 16px 0; font-size: 18px; color: #0f172a;">
+                    <i class="fas fa-link" style="color: #6366f1;"></i> External Logins
+                </h3>
+                <div style="font-size: 14px; color: #64748b; margin-bottom: 12px;">
+                    @Model.ExternalLoginsCount connected account(s)
+                </div>
+                <a href="/Manage/ExternalLogins" class="btn btn-secondary" style="width: auto; display: inline-flex;">
+                    <i class="fas fa-cog"></i> Manage
+                </a>
+            </div>
+
+            <!-- Recent Activity Section -->
+            <div style="padding: 20px; background: #f8fafc; border-radius: 12px;">
+                <h3 style="margin: 0 0 16px 0; font-size: 18px; color: #0f172a;">
+                    <i class="fas fa-history" style="color: #6366f1;"></i> Recent Activity
+                </h3>
+                <div style="display: grid; gap: 8px;">
+                    @foreach (var evt in Model.RecentActivity)
+                    {
+                        <div style="font-size: 13px; padding-bottom: 8px; border-bottom: 1px dashed #e2e8f0;">
+                            <span style="color: #64748b; margin-right: 8px;">@evt.Timestamp.ToString("MMM dd HH:mm")</span>
+                            <span style="font-weight: 600; color: #0f172a;">@evt.EventType</span>: 
+                            <span style="color: #334155;">@evt.Message</span>
+                        </div>
+                    }
+                    @if (!Model.RecentActivity.Any())
+                    {
+                        <div style="font-size: 13px; color: #64748b;">No recent activity found.</div>
+                    }
+                </div>
+            </div>
+
+            <!-- Privacy & Data -->
+            <div style="padding: 20px; background: #f8fafc; border-radius: 12px;">
+                <h3 style="margin: 0 0 16px 0; font-size: 18px; color: #0f172a;">
+                    <i class="fas fa-database" style="color: #6366f1;"></i> Privacy & Data
+                </h3>
+                <div style="display: grid; gap: 8px;">
+                    <a href="/Manage/PersonalData" class="link">Download your data</a>
+                    <a href="/Manage/DeleteAccount" class="link" style="color: #ef4444;">Delete account</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

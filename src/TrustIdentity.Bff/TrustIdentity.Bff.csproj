@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Authors>TrustIdentity Team</Authors>
+    <Company>TrustIdentity</Company>
+    <Product>TrustIdentity BFF</Product>
+    <Description>Backend-for-Frontend (BFF) pattern implementation for TrustIdentity - Simplifies SPA security by handling tokens server-side</Description>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TrustIdentity.Abstractions\TrustIdentity.Abstractions.csproj" />
+    <ProjectReference Include="..\TrustIdentity.Core\TrustIdentity.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+  </ItemGroup>
+
+</Project>

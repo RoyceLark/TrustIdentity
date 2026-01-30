@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "TrustIdentity",
+    "classifications": [
+        "Identity",
+        "Security",
+        "Web"
+    ],
+    "name": "TrustIdentity Server",
+    "identity": "TrustIdentity.Server.Template",
+    "shortName": "trustid",
+    "tags": {
+        "language": "C#",
+        "type": "project"
+    },
+    "sourceName": "TrustIdentity.Server",
+    "preferNameDirectory": true
+}

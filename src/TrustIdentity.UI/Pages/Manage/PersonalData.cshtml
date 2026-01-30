@@ -1,0 +1,23 @@
+@page
+@model PersonalDataModel
+@{
+    ViewData["Title"] = "Personal Data";
+}
+
+<div class="auth-card">
+    <div class="auth-header">
+        <h1>Personal Data</h1>
+        <p>Manage your personal data and account</p>
+    </div>
+    <div class="auth-body">
+        <p>Your account contains personal data that you have given us. This page allows you to download or delete that data.</p>
+        <p><strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong></p>
+        
+        <div style="display: grid; gap: 12px; margin-top: 24px;">
+            <form method="post" asp-page-handler="Download">
+                <button type="submit" class="btn btn-secondary">Download Data</button>
+            </form>
+            <a asp-page="./DeleteAccount" class="btn btn-danger">Delete Account</a>
+        </div>
+    </div>
+</div>

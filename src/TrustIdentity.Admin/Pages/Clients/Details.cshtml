@@ -1,0 +1,174 @@
+@page "{id}"
+@model TrustIdentity.Admin.Pages.Clients.DetailsModel
+@{
+    ViewData["Title"] = "Client Details - " + Model.Client.ClientId;
+}
+
+<div class="container-fluid py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-page="./Index">Clients</a></li>
+            <li class="breadcrumb-item active">@Model.Client.ClientId</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">@Model.Client.ClientName</h1>
+            <p class="text-muted">@Model.Client.ClientId</p>
+        </div>
+        <div class="btn-group">
+            <a asp-page="./Edit" asp-route-id="@Model.Client.ClientId" class="btn btn-primary">
+                Edit Client
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">Basic Information</h5>
+                </div>
+                <div class="card-body pt-0">
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">Description</div>
+                        <div class="col-sm-8 text-dark">@(Model.Client.Description ?? "No description provided")</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">Enabled</div>
+                        <div class="col-sm-8 text-dark">
+                            @if (Model.Client.Enabled)
+                            {
+                                <span class="badge bg-success-soft text-success">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger-soft text-danger">No</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">Created</div>
+                        <div class="col-sm-8 text-dark">@Model.Client.Created.ToString("MMMM dd, yyyy HH:mm")</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">Protocol Type</div>
+                        <div class="col-sm-8 text-dark">@Model.Client.ProtocolType</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">Allowed Scopes</h5>
+                </div>
+                <div class="card-body pt-0">
+                    <div class="d-flex flex-wrap gap-2">
+                        @if (Model.Client.AllowedScopes.Any())
+                        {
+                            @foreach (var scope in Model.Client.AllowedScopes)
+                            {
+                                <span class="badge bg-light text-dark border p-2 px-3">@scope</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-muted italic">No scopes allowed</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">Grant Types</h5>
+                </div>
+                <div class="card-body pt-0">
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var grantType in Model.Client.AllowedGrantTypes)
+                        {
+                            <span class="badge bg-primary-soft text-primary p-2 px-3">@grantType</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">Redirect URIs</h5>
+                </div>
+                <div class="card-body pt-0">
+                    <ul class="list-group list-group-flush">
+                        @foreach (var uri in Model.Client.RedirectUris)
+                        {
+                            <li class="list-group-item px-0 border-0 py-1">
+                                <code class="text-primary">@uri</code>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">Security Settings</h5>
+                </div>
+                <div class="card-body pt-0">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Require Secret</span>
+                        <span class="fw-bold">@(Model.Client.RequireClientSecret ? "Yes" : "No")</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Require PKCE</span>
+                        <span class="fw-bold">@(Model.Client.RequirePkce ? "Yes" : "No")</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Require Consent</span>
+                        <span class="fw-bold">@(Model.Client.RequireConsent ? "Yes" : "No")</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Allow Offline Access</span>
+                        <span class="fw-bold">@(Model.Client.AllowOfflineAccess ? "Yes" : "No")</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-4 bg-dark text-white">
+                <div class="card-header bg-transparent border-0 py-3">
+                    <h5 class="mb-0">AI/ML Insights</h5>
+                </div>
+                <div class="card-body pt-0">
+                    @if (Model.Client.AISettings != null)
+                    {
+                        <div class="mb-3">
+                            <label class="small text-uppercase opacity-50 d-block">Fraud Threshold</label>
+                            <div class="progress mt-1" style="height: 6px;">
+                                <div class="progress-bar bg-info" role="progressbar" style="width: @(Model.Client.AISettings.FraudThreshold * 100)%;"></div>
+                            </div>
+                            <span class="small">@Model.Client.AISettings.FraudThreshold.ToString("P0")</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="flex-grow-1 small">Adaptive Auth</div>
+                            <span class="badge @(Model.Client.AISettings.EnableAdaptiveAuthentication ? "bg-success" : "bg-secondary")">
+                                @(Model.Client.AISettings.EnableAdaptiveAuthentication ? "Enabled" : "Disabled")
+                            </span>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="small text-muted mb-0">No AI settings configured for this client.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-success-soft { background-color: rgba(25, 135, 84, 0.1); }
+    .bg-danger-soft { background-color: rgba(220, 53, 69, 0.1); }
+    .bg-primary-soft { background-color: rgba(13, 110, 253, 0.1); }
+</style>

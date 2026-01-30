@@ -1,0 +1,76 @@
+@page
+@model CreateModel
+@{
+    ViewData["Title"] = "Issue License";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="glass-panel">
+            <div class="d-flex align-items-center mb-4">
+                <a asp-page="Index" class="btn btn-outline-light btn-sm me-3"><i class="fas fa-arrow-left"></i></a>
+                <h2 class="mb-0">New License</h2>
+            </div>
+            
+            <form method="post">
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Input.CustomerName" class="form-label font-weight-bold">Customer Name</label>
+                    <input asp-for="Input.CustomerName" class="form-control bg-dark text-white border-secondary" placeholder="e.g. Acme Corp" required />
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="Input.CustomerEmail" class="form-label">Email Address</label>
+                    <input asp-for="Input.CustomerEmail" class="form-control bg-dark text-white border-secondary" type="email" placeholder="billing@acme.com" />
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Input.LicenseType" class="form-label">License Tier</label>
+                        <select asp-for="Input.LicenseType" class="form-select bg-dark text-white border-secondary">
+                            <option value="Standard">Standard</option>
+                            <option value="Enterprise">Enterprise</option>
+                            <option value="Trial">Trial</option>
+                            <option value="Developer">Developer</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Input.ValidityDays" class="form-label">Validity (Days)</label>
+                        <input asp-for="Input.ValidityDays" class="form-control bg-dark text-white border-secondary" type="number" min="1" max="3650" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Input.Features" class="form-label">Enabled Capabilities</label>
+                    <input asp-for="Input.Features" class="form-control bg-dark text-white border-secondary" placeholder="SSO, MFA, FraudDetection" />
+                    <div class="form-text text-muted">Comma separated values</div>
+                </div>
+
+                @if (!Model.HasConfiguredKey)
+                {
+                    <div class="mb-3">
+                        <label asp-for="Input.PrivateKey" class="form-label">Signer Private Key (XML)</label>
+                        <textarea asp-for="Input.PrivateKey" class="form-control bg-dark text-white border-secondary" rows="4"></textarea>
+                        <div class="form-text">
+                            Key required to digitally sign the license. 
+                            <a asp-page="Keys" class="text-primary-light text-decoration-none">Need a key?</a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert bg-success bg-opacity-10 border border-success border-opacity-25 py-2 mb-4">
+                        <i class="fas fa-shield-check text-success me-2"></i> System is configured with a secure Environment Key.
+                    </div>
+                }
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-file-signature me-2"></i> Generate & Issue License
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

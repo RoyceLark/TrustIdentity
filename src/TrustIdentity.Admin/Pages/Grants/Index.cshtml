@@ -1,0 +1,90 @@
+@page
+@model TrustIdentity.Admin.Pages.Grants.IndexModel
+@{
+    ViewData["Title"] = "Persisted Grants";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">Persisted Grants</h1>
+            <p class="text-muted">Manage active authorization codes, refresh tokens, and consent grants.</p>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <form method="get" class="row g-3">
+                <div class="col-md-6">
+                    <input type="text" name="subjectId" class="form-control" placeholder="Search by Subject ID..." value="@Model.SubjectId">
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                    @if (!string.IsNullOrEmpty(Model.SubjectId))
+                    {
+                        <a asp-page="./Index" class="btn btn-link">Clear</a>
+                    }
+                </div>
+            </form>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="px-4 py-3 border-0 text-uppercase small fw-bold text-muted">Subject</th>
+                        <th class="py-3 border-0 text-uppercase small fw-bold text-muted">Client</th>
+                        <th class="py-3 border-0 text-uppercase small fw-bold text-muted">Type</th>
+                        <th class="py-3 border-0 text-uppercase small fw-bold text-muted">Expires</th>
+                        <th class="py-3 border-0 text-uppercase small fw-bold text-muted text-end px-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Grants.Any())
+                    {
+                        foreach (var grant in Model.Grants)
+                        {
+                            <tr>
+                                <td class="px-4 py-3 border-top">
+                                    <span class="fw-bold">@grant.SubjectId</span>
+                                </td>
+                                <td class="py-3 border-top">@grant.ClientId</td>
+                                <td class="py-3 border-top">
+                                    <span class="badge bg-info-soft text-info">@grant.Type</span>
+                                </td>
+                                <td class="py-3 border-top">
+                                    @if (grant.Expiration.HasValue)
+                                    {
+                                        <span class="@(grant.Expiration < DateTime.UtcNow ? "text-danger" : "text-muted")">
+                                            @grant.Expiration.Value.ToString("yyyy-MM-dd HH:mm")
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted italic">Never</span>
+                                    }
+                                </td>
+                                <td class="py-3 border-top text-end px-4">
+                                    <form method="post" asp-page-handler="Revoke" asp-route-key="@grant.Key" onsubmit="return confirm('Revoke this grant?');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Revoke</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                @(string.IsNullOrEmpty(Model.SubjectId) ? "Enter a Subject ID to search for grants." : "No active grants found for this user.")
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-info-soft { background-color: rgba(13, 202, 240, 0.1); }
+</style>

@@ -1,0 +1,26 @@
+@page
+@model DeleteAccountModel
+@{
+    ViewData["Title"] = "Delete Account";
+}
+
+<div class="auth-card">
+    <div class="auth-header">
+        <h1>Delete Account</h1>
+        <p style="color: #ef4444;">Warning: This action is permanent</p>
+    </div>
+    <div class="auth-body">
+        <p>Deleting your account will permanently remove all your data, including your profile, settings, and any associated information. This action cannot be undone.</p>
+        
+        <form method="post" style="margin-top: 24px;">
+            <div class="form-group">
+                <label>Please enter your password to confirm</label>
+                <input type="password" name="password" class="form-input" required />
+            </div>
+            <div style="display: grid; gap: 12px; margin-top: 24px;">
+                <button type="submit" class="btn btn-danger">Permanently Delete My Account</button>
+                <a href="/Manage/Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

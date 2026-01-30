@@ -1,0 +1,113 @@
+@page
+@model TrustIdentity.Admin.Pages.Clients.CreateModel
+@{
+    ViewData["Title"] = "Create New Client";
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-page="./Index">Clients</a></li>
+            <li class="breadcrumb-item active">New Client</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <h1 class="h3 mb-0">Create New Client</h1>
+                    <p class="text-muted small mb-0">Register a new application to use TrustIdentity</p>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="Input.ClientId" class="form-label fw-bold small text-uppercase"></label>
+                                <input asp-for="Input.ClientId" class="form-control form-control-lg border-2" placeholder="e.g. web-app" />
+                                <span asp-validation-for="Input.ClientId" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Input.ClientName" class="form-label fw-bold small text-uppercase"></label>
+                                <input asp-for="Input.ClientName" class="form-control form-control-lg border-2" placeholder="e.g. My Web Portal" />
+                                <span asp-validation-for="Input.ClientName" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Description" class="form-label fw-bold small text-uppercase"></label>
+                            <textarea asp-for="Input.Description" class="form-control border-2" rows="3" placeholder="Briefly describe what this application does..."></textarea>
+                            <span asp-validation-for="Input.Description" class="text-danger small"></span>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h5 class="mb-3">Capabilities</h5>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-uppercase d-block">Grant Types</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="Input.AllowedGrantTypes" value="authorization_code" checked id="grant_code">
+                                        <label class="form-check-label" for="grant_code">Authorization Code <small class="text-muted d-block">(Standard for apps with a backend)</small></label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="Input.AllowedGrantTypes" value="client_credentials" id="grant_cc">
+                                        <label class="form-check-label" for="grant_cc">Client Credentials <small class="text-muted d-block">(Machine-to-machine)</small></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="Input.AllowedGrantTypes" value="implicit" id="grant_implicit">
+                                        <label class="form-check-label" for="grant_implicit">Implicit <small class="text-muted d-block">(Legacy for browser apps)</small></label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="Input.AllowedGrantTypes" value="urn:openid:params:grant-type:ciba" id="grant_ciba">
+                                        <label class="form-check-label" for="grant_ciba">CIBA <small class="text-muted d-block">(Backchannel Authentication)</small></label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="Input.AllowedGrantTypes" value="password" id="grant_password">
+                                        <label class="form-check-label" for="grant_password">Resource Owner Password <small class="text-muted d-block">(Legacy, high-trust apps)</small></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-4">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" asp-for="Input.Enabled">
+                                    <label class="form-check-label fw-bold" asp-for="Input.Enabled"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" asp-for="Input.AllowOfflineAccess">
+                                    <label class="form-check-label fw-bold" asp-for="Input.AllowOfflineAccess"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" asp-for="Input.RequirePkce">
+                                    <label class="form-check-label fw-bold" asp-for="Input.RequirePkce"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a asp-page="./Index" class="btn btn-light px-4">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-5">Create Client</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,96 @@
+@page
+@model ValidateModel
+@{
+    ViewData["Title"] = "License Verifier";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="glass-panel">
+            <div class="text-center mb-4">
+                <i class="fas fa-shield-check text-primary-light fs-1 mb-3"></i>
+                <h2 class="mb-1">Quick Verifier</h2>
+                <p class="text-muted">Validate any TrustIdentity license key below.</p>
+            </div>
+            
+            <form method="post">
+                <div class="mb-4">
+                    <textarea asp-for="LicenseKey" class="form-control bg-dark text-success font-monospace border-secondary" rows="5" placeholder="Paste your .license key here..."></textarea>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                         Verify Key Authenticity
+                    </button>
+                </div>
+            </form>
+
+            @if (Model.IsValid.HasValue)
+            {
+                <div class="mt-5 p-4 rounded-4 @(Model.IsValid.Value ? "bg-success bg-opacity-10 border border-success" : "bg-danger bg-opacity-10 border border-danger") pulse-animation">
+                    <div class="d-flex align-items-center mb-3">
+                        @if (Model.IsValid.Value)
+                        {
+                            <i class="fas fa-check-circle text-success fs-1 me-3"></i>
+                            <div>
+                                <h4 class="mb-0 text-success">Authentic License</h4>
+                                <p class="text-success-emphasis mb-0 small">Verified by TrustIdentity Master Key Authority.</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <i class="fas fa-times-circle text-danger fs-1 me-3"></i>
+                            <div>
+                                <h4 class="mb-0 text-danger">Verification Failed</h4>
+                                <p class="text-danger-emphasis mb-0 small">@Model.Error</p>
+                            </div>
+                        }
+                    </div>
+
+                    @if (Model.ValidatedLicense != null)
+                    {
+                        <div class="card bg-black bg-opacity-50 border-0 p-3 mt-3 shadow-sm">
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <label class="text-muted small text-uppercase fw-bold">Issued To</label>
+                                    <div class="text-white">@Model.ValidatedLicense.CustomerName</div>
+                                    <div class="small text-muted">@Model.ValidatedLicense.CustomerEmail</div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="text-muted small text-uppercase fw-bold">License Tier</label>
+                                    <div><span class="badge bg-primary">@Model.ValidatedLicense.LicenseType</span></div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="text-muted small text-uppercase fw-bold">Expiration</label>
+                                    <div class="@(Model.ValidatedLicense.ExpiresAt < DateTime.UtcNow ? "text-danger" : "text-success")">
+                                        @Model.ValidatedLicense.ExpiresAt.ToString("MMM dd, yyyy")
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="text-muted small text-uppercase fw-bold">Capabilities</label>
+                                    <div class="d-flex flex-wrap gap-1 mt-1">
+                                        @foreach(var feat in Model.ValidatedLicense.Features)
+                                        {
+                                            <span class="badge border border-secondary text-secondary" style="font-size: 0.7rem;">@feat</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .pulse-animation {
+        animation: pulse 2s infinite;
+    }
+    @@keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.2); }
+        70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+    }
+</style>

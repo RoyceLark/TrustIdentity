@@ -1,0 +1,75 @@
+@page
+@model TrustIdentity.UI.Pages.Sessions.IndexModel
+@{
+    ViewData["Title"] = "Active Sessions";
+}
+
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5 fw-bold text-dark">Active Sessions</h1>
+            <p class="lead text-muted">Manage your active sessions across different devices and browsers.</p>
+        </div>
+    </div>
+
+    @if (!Model.Sessions.Any())
+    {
+        <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-light">
+            <div class="mb-3">
+                <i class="bi bi-shield-lock text-muted" style="font-size: 3rem;"></i>
+            </div>
+            <h3 class="h4 fw-normal">No active sessions found</h3>
+            <p class="text-muted">You are currently using this session, but no other server-side sessions were found.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var session in Model.Sessions)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+                                    <i class="bi bi-laptop text-primary h4 mb-0"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title mb-0 fw-bold">Session</h5>
+                                    <small class="text-muted">ID: @session.SessionId.Substring(0, 8)...</small>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="small text-uppercase fw-bold text-muted mb-1">Created</div>
+                                <div class="text-dark">@session.Created.ToString("MMM dd, yyyy HH:mm")</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="small text-uppercase fw-bold text-muted mb-1">Expires</div>
+                                <div class="text-dark">@session.Expires.ToString("MMM dd, yyyy HH:mm")</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="small text-uppercase fw-bold text-muted mb-1">Associated Apps</div>
+                                <div class="d-flex flex-wrap gap-1 mt-1">
+                                    @foreach (var clientId in session.ClientIds)
+                                    {
+                                        <span class="badge bg-light text-dark border shadow-xs">@clientId</span>
+                                    }
+                                </div>
+                            </div>
+
+                            <form method="post" asp-page-handler="Revoke">
+                                <input type="hidden" name="sessionId" value="@session.SessionId" />
+                                <button type="submit" class="btn btn-outline-danger w-100 rounded-pill btn-sm py-2">
+                                    <i class="bi bi-x-circle me-2"></i>Terminate Session
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

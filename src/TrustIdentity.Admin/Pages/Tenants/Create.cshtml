@@ -1,0 +1,126 @@
+@page
+@model TrustIdentity.Admin.Pages.Tenants.CreateModel
+@{
+    ViewData["Title"] = "Create Tenant";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">Create New Tenant</h1>
+                <a asp-page="Index" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.Name" class="form-label"></label>
+                                <input asp-for="Input.Name" class="form-control" placeholder="Acme Corporation" />
+                                <span asp-validation-for="Input.Name" class="text-danger"></span>
+                                <small class="form-text text-muted">The display name for this tenant</small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.Identifier" class="form-label"></label>
+                                <input asp-for="Input.Identifier" class="form-control" placeholder="acme" />
+                                <span asp-validation-for="Input.Identifier" class="text-danger"></span>
+                                <small class="form-text text-muted">Unique identifier (lowercase, no spaces)</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.Host" class="form-label"></label>
+                                <input asp-for="Input.Host" class="form-control" placeholder="acme.myapp.com" />
+                                <span asp-validation-for="Input.Host" class="text-danger"></span>
+                                <small class="form-text text-muted">Domain for host-based resolution</small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.IssuerUri" class="form-label"></label>
+                                <input asp-for="Input.IssuerUri" class="form-control" placeholder="https://acme.identity.com" />
+                                <span asp-validation-for="Input.IssuerUri" class="text-danger"></span>
+                                <small class="form-text text-muted">Custom issuer URI (optional)</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Input.SubscriptionTier" class="form-label"></label>
+                                <select asp-for="Input.SubscriptionTier" class="form-select">
+                                    <option value="">Select tier...</option>
+                                    <option value="Free">Free</option>
+                                    <option value="Starter">Starter</option>
+                                    <option value="Professional">Professional</option>
+                                    <option value="Enterprise">Enterprise</option>
+                                </select>
+                                <span asp-validation-for="Input.SubscriptionTier" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Input.MaxUsers" class="form-label"></label>
+                                <input asp-for="Input.MaxUsers" type="number" class="form-control" placeholder="1000" />
+                                <span asp-validation-for="Input.MaxUsers" class="text-danger"></span>
+                                <small class="form-text text-muted">Leave empty for unlimited</small>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Input.MaxClients" class="form-label"></label>
+                                <input asp-for="Input.MaxClients" type="number" class="form-control" placeholder="50" />
+                                <span asp-validation-for="Input.MaxClients" class="text-danger"></span>
+                                <small class="form-text text-muted">Leave empty for unlimited</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.SubscriptionExpiresAt" class="form-label"></label>
+                                <input asp-for="Input.SubscriptionExpiresAt" type="date" class="form-control" />
+                                <span asp-validation-for="Input.SubscriptionExpiresAt" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3 d-flex align-items-end">
+                                <div class="form-check">
+                                    <input asp-for="Input.IsActive" class="form-check-input" />
+                                    <label asp-for="Input.IsActive" class="form-check-label"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Create Tenant
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <div class="alert alert-info">
+                    <h6><i class="fas fa-info-circle"></i> Tenant Configuration Tips</h6>
+                    <ul class="mb-0">
+                        <li><strong>Identifier:</strong> Used in URLs and API calls. Cannot be changed after creation.</li>
+                        <li><strong>Host:</strong> For subdomain-based multi-tenancy (e.g., tenant1.myapp.com)</li>
+                        <li><strong>Limits:</strong> Set user and client limits to control tenant resource usage</li>
+                        <li><strong>Subscription:</strong> Track billing tier and expiration dates</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

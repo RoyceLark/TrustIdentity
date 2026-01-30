@@ -1,0 +1,83 @@
+@page
+@model TrustIdentity.Admin.Pages.Resources.CreateIdentityModel
+@{
+    ViewData["Title"] = "Create Identity Resource";
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-page="./Index">Resources</a></li>
+            <li class="breadcrumb-item active">New Identity Resource</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <h1 class="h3 mb-0">Create Identity Resource</h1>
+                    <p class="text-muted small mb-0">Identity resources are data like user ID, name, or email address</p>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Input.Name" class="form-label fw-bold small text-uppercase"></label>
+                            <input asp-for="Input.Name" class="form-control" placeholder="e.g. profile, email" />
+                            <span asp-validation-for="Input.Name" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.DisplayName" class="form-label fw-bold small text-uppercase"></label>
+                            <input asp-for="Input.DisplayName" class="form-control" placeholder="Friendly name for users" />
+                            <span asp-validation-for="Input.DisplayName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Description" class="form-label fw-bold small text-uppercase"></label>
+                            <textarea asp-for="Input.Description" class="form-control" rows="2"></textarea>
+                            <span asp-validation-for="Input.Description" class="text-danger small"></span>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="mb-3">
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" asp-for="Input.Required">
+                                <label class="form-check-label fw-bold" asp-for="Input.Required">Required</label>
+                                <div class="form-text mt-0 small text-muted">User cannot de-select this scope on consent screen.</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" asp-for="Input.Emphasize">
+                                <label class="form-check-label fw-bold" asp-for="Input.Emphasize">Emphasize</label>
+                                <div class="form-text mt-0 small text-muted">Highlight this scope on consent screen.</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" asp-for="Input.ShowInDiscoveryDocument">
+                                <label class="form-check-label fw-bold" asp-for="Input.ShowInDiscoveryDocument">Discovery</label>
+                                <div class="form-text mt-0 small text-muted">Show this scope in the OIDC discovery document.</div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a asp-page="./Index" class="btn btn-light px-4">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-5">Create Resource</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

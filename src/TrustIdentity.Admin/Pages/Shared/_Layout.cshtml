@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TrustIdentity.Admin</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/TrustIdentity.Admin.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold" asp-area="" asp-page="/Index">
+                    <span style="color: #6366f1;">Trust</span>Identity Admin
+                </a>
+            </div>
+        </nav>
+    </header>
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-white sidebar collapse border-end" style="min-height: calc(100vh - 56px);">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link py-3 px-4 border-bottom text-dark" asp-page="/Dashboard">
+                                <i class="fas fa-chart-line me-2 text-primary"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link py-3 px-4 border-bottom text-dark" asp-page="/Clients/Index">
+                                <i class="fas fa-th-large me-2 text-primary"></i> Clients
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link py-3 px-4 border-bottom text-dark" asp-page="/Users/Index">
+                                <i class="fas fa-users me-2 text-primary"></i> Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link py-3 px-4 border-bottom text-dark" asp-page="/Resources/Index">
+                                <i class="fas fa-key me-2 text-primary"></i> Resources
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link py-3 px-4 border-bottom text-dark" asp-page="/AuditLogs">
+                                <i class="fas fa-history me-2 text-primary"></i> Audit Logs
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link py-3 px-4 border-bottom text-dark" asp-page="/Grants/Index">
+                                <i class="fas fa-shield-alt me-2 text-primary"></i> Grants
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2026 - TrustIdentity.Admin - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

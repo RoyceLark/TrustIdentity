@@ -1,0 +1,110 @@
+@page "{id}"
+@model TrustIdentity.Admin.Pages.Clients.EditModel
+@{
+    ViewData["Title"] = "Edit Client - " + Model.Input.ClientId;
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-page="./Index">Clients</a></li>
+            <li class="breadcrumb-item"><a asp-page="./Details" asp-route-id="@Model.Input.ClientId">@Model.Input.ClientId</a></li>
+            <li class="breadcrumb-item active">Edit</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-0">Edit Client</h1>
+                        <p class="text-muted small mb-0">Configuration for <strong>@Model.Input.ClientId</strong></p>
+                    </div>
+                    <span class="badge @(Model.Input.Enabled ? "bg-success" : "bg-danger")">
+                        @(Model.Input.Enabled ? "Active" : "Disabled")
+                    </span>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <input type="hidden" asp-for="Input.ClientId" />
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Input.ClientName" class="form-label fw-bold small text-uppercase"></label>
+                            <input asp-for="Input.ClientName" class="form-control form-control-lg border-2" />
+                            <span asp-validation-for="Input.ClientName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Description" class="form-label fw-bold small text-uppercase"></label>
+                            <textarea asp-for="Input.Description" class="form-control border-2" rows="3"></textarea>
+                            <span asp-validation-for="Input.Description" class="text-danger small"></span>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h5 class="mb-3">Capabilities</h5>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-uppercase d-block">Grant Types</label>
+                            <div class="row">
+                                @{
+                                    var grants = new[] { 
+                                        new { Value = "authorization_code", Label = "Authorization Code", Desc = "Standard for apps with a backend" },
+                                        new { Value = "client_credentials", Label = "Client Credentials", Desc = "Machine-to-machine" },
+                                        new { Value = "implicit", Label = "Implicit", Desc = "Legacy for browser apps" },
+                                        new { Value = "password", Label = "Resource Owner Password", Desc = "Legacy, high-trust apps" }
+                                    };
+                                }
+                                @foreach (var grant in grants)
+                                {
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="Input.AllowedGrantTypes" 
+                                                   value="@grant.Value" id="grant_@grant.Value"
+                                                   @(Model.Input.AllowedGrantTypes.Contains(grant.Value) ? "checked" : "")>
+                                            <label class="form-check-label" for="grant_@grant.Value">
+                                                @grant.Label <small class="text-muted d-block">(@grant.Desc)</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-4">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" asp-for="Input.Enabled">
+                                    <label class="form-check-label fw-bold" asp-for="Input.Enabled"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" asp-for="Input.AllowOfflineAccess">
+                                    <label class="form-check-label fw-bold" asp-for="Input.AllowOfflineAccess"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" asp-for="Input.RequirePkce">
+                                    <label class="form-check-label fw-bold" asp-for="Input.RequirePkce"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a asp-page="./Details" asp-route-id="@Model.Input.ClientId" class="btn btn-light px-4">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-5">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

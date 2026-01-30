@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  trustidentity:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5001:80"
+      - "5002:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    volumes:
+      - ~/.aspnet/https:/https:ro
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: trustidentity
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: trustidentity
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+volumes:
+  postgres-data:
+  redis-data:
