@@ -1,144 +1,135 @@
-# TrustIdentity - Complete Identity & Access Management for .NET
+# TrustIdentity.AspNetCore
 
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
-[![.NET](https://img.shields.io/badge/.NET-9.0%20%7C%2010.0-512BD4)](https://dotnet.microsoft.com/)
-[![NuGet](https://img.shields.io/badge/NuGet-1.0.0-blue)](https://www.nuget.org/packages/TrustIdentity.Server)
+**ASP.NET Core integration for TrustIdentity**
 
-**TrustIdentity** is a complete, production-ready OpenID Connect and OAuth 2.0 framework for .NET 9/10 with advanced AI/ML capabilities. Built with 100% feature parity to Other IdentityServer, plus unique fraud detection and behavioral analysis features.
+---
 
-## 🎯 One-Command Installation
+## 📦 Overview
 
-```bash
-dotnet add package TrustIdentity.Server
-```
+`TrustIdentity.AspNetCore` provides ASP.NET Core integration, including middleware, endpoints, and dependency injection configuration.
 
-That's it! One package includes everything.
+---
 
-## ✨ Key Features
+## 🎯 Purpose
 
-### 🌐 Complete Protocol Support
-- ✅ **OpenID Connect (OIDC)** 1.0
-- ✅ **OAuth 2.0** (RFC 6749)
-- ✅ **SAML 2.0** (Identity Provider & Service Provider)
-- ✅ **WS-Federation** 1.2
-- ✅ **All 8 Grant Types**: Authorization Code, Client Credentials, Implicit, Hybrid, ROPC, Device Flow, Refresh Token, Token Exchange
+This package bridges TrustIdentity.Core with ASP.NET Core, providing:
 
-### 🔐 Production-Grade Security
-- ✅ **PKCE** (RFC 7636) & **DPoP** (RFC 9449)
-- ✅ **PAR** (RFC 9126) & **mTLS** (RFC 8705)
-- ✅ **JWT & Reference tokens**
-- ✅ **Token Encryption & Signing** (RSA, EC)
-- ✅ **Key Management** & Automatic Rotation
-- ✅ **Security Headers** & Rate Limiting
-- ✅ **CORS** & Account Lockout
+- HTTP endpoints for OAuth/OIDC
+- Middleware integration
+- Dependency injection setup
+- Request/response handling
 
-### 🧠 AI/ML Capabilities (Unique!)
-- ✅ **Real-time fraud detection** with ML.NET
-- ✅ **Behavioral analysis** - pattern recognition
-- ✅ **Risk scoring** - composite risk calculation
-- ✅ **Adaptive authentication** - AI-driven MFA
-- ✅ **Anomaly detection** - suspicious activity alerts
-- ✅ **Device fingerprinting** - track user devices
+---
 
-### 💾 Enterprise Storage
-- ✅ **Entity Framework Core**
-- ✅ SQL Server, PostgreSQL, MySQL, SQLite
-- ✅ In-memory stores for development
-- ✅ Distributed caching (Redis)
+## 📋 Key Components
 
-## 🚀 Quick Start
+### Endpoints
+
+- **`/connect/authorize`** - Authorization endpoint
+- **`/connect/token`** - Token endpoint
+- **`/connect/userinfo`** - UserInfo endpoint
+- **`/connect/introspect`** - Token introspection
+- **`/connect/revocation`** - Token revocation
+- **`/connect/endsession`** - Logout endpoint
+- **`/connect/device`** - Device authorization
+- **`/connect/ciba`** - Backchannel authentication
+- **`/connect/par`** - Pushed authorization request
+- **`/connect/register`** - Dynamic client registration
+- **`/.well-known/openid-configuration`** - Discovery document
+- **`/.well-known/jwks`** - JSON Web Key Set
+
+### Middleware
+
+- **`TrustIdentityMiddleware`** - Main middleware
+- **`RateLimitingMiddleware`** - Rate limiting
+- **`DDoSProtectionMiddleware`** - DDoS protection
+- **`TenantResolutionMiddleware`** - Multi-tenancy support
+
+### Extensions
+
+- **`ServiceCollectionExtensions`** - DI configuration
+- **`ApplicationBuilderExtensions`** - Middleware setup
+
+---
+
+## 🔧 Usage
+
+### Basic Setup
 
 ```csharp
 using TrustIdentity.AspNetCore.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add TrustIdentity with AI/ML
+// Add TrustIdentity services
 builder.Services.AddTrustIdentity(options =>
 {
     options.IssuerUri = "https://localhost:5001";
-    options.EnableAI = true;
-    options.EnableFraudDetection = true;
 })
-.AddInMemoryClients(Config.Clients)
-.AddInMemoryIdentityResources(Config.IdentityResources)
-.AddInMemoryApiScopes(Config.ApiScopes)
-.AddDeveloperSigningCredential()
-.AddAIFraudDetection()
-.AddBehaviorAnalysis()
-.AddRiskScoring();
+.AddInMemoryClients(Config.GetClients())
+.AddInMemoryIdentityResources(Config.GetIdentityResources())
+.AddInMemoryApiScopes(Config.GetApiScopes())
+.AddDeveloperSigningCredential();
 
 var app = builder.Build();
+
+// Use TrustIdentity middleware
 app.UseTrustIdentity();
+
 app.Run();
 ```
 
-## 📦 Package Structure
+### Advanced Configuration
 
-**TrustIdentity.Server** (meta-package) includes:
-
-- `TrustIdentity.Abstractions` - Core interfaces
-- `TrustIdentity.Core` - Business logic & models
-- `TrustIdentity.Storage` - EF Core persistence
-- `TrustIdentity.AspNetCore` - Web integration
-- `TrustIdentity.Saml` - SAML 2.0 implementation
-- `TrustIdentity.WsFederation` - WS-Federation implementation
-- `TrustIdentity.AI` - AI fraud detection
-- `TrustIdentity.ML` - ML.NET models
-
-## 🎓 Documentation
-
-- [Getting Started](docs/getting-started.md)
-- [OIDC & OAuth 2.0 Guide](docs/oidc-oauth.md)
-- [SAML 2.0 Guide](src/TrustIdentity.Saml/README.md)
-- [WS-Federation Guide](src/TrustIdentity.WsFederation/README.md)
-- [NuGet Publishing Guide](docs/NUGET_GUIDE.md)
-- [Project Overview](PROJECT_OVERVIEW.md)
-- [Contributing](CONTRIBUTING.md)
-
-## 💡 Why TrustIdentity?
-
-| Feature | Others | TrustIdentity |
-|---------|--------|---------------|
-| OAuth 2.0 / OIDC | ✅ | ✅ |
-| **SAML 2.0** | ✅ | ✅ |
-| **WS-Federation** | ✅ | ✅ |
-| All Grant Types | ✅ | ✅ |
-| EF Core Storage | ✅ | ✅ |
-| **AI Fraud Detection** | ❌ | ✅ |
-| **Behavioral Analysis** | ❌ | ✅ |
-| **Risk Scoring** | ❌ | ✅ |
-| **License** | Commercial | **Apache 2.0 (FREE)** |
-| **Cost** | $1,500+/year | **$0** |
-
-##  Roadmap
-
-- [x] Complete OAuth 2.0 & OpenID Connect
-- [x] AI/ML fraud detection
-- [x] Entity Framework Core support
-- [x] SAML 2.0 support
-- [x] WS-Federation support
-- [ ] Azure AD B2C compatibility (External Provider)
-- [ ] Admin UI
-- [ ] Multi-tenancy
-
-## 📄 License
-
-Apache 2.0 - See [LICENSE](LICENSE) for details.
-This project is completely free and open source. No license fees, ever.
-
-## 🤝 Contributing
-
-Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-## 🌟 Support
-
-- 📧 Email: web.html123@gmail.com
-- 💬 Discussions: [GitHub Discussions](https://github.com/roycelark/trustidentity/discussions)
-- 🐛 Issues: [GitHub Issues](https://github.com/roycelark/trustidentity/issues)
+```csharp
+builder.Services.AddTrustIdentity(options =>
+{
+    // Issuer
+    options.IssuerUri = "https://identity.example.com";
+    
+    // Security
+    options.RequireHttps = true;
+    options.RequirePkce = true;
+    
+    // Features
+    options.EnableAI = true;
+    options.EnableMultiTenancy = true;
+    
+    // Endpoints
+    options.EnableDiscoveryEndpoint = true;
+    options.EnableTokenEndpoint = true;
+    options.EnableUserInfoEndpoint = true;
+    options.EnableIntrospectionEndpoint = true;
+    options.EnableRevocationEndpoint = true;
+    
+    // Token lifetimes
+    options.AccessTokenLifetime = 3600;
+    options.IdentityTokenLifetime = 300;
+    options.RefreshTokenLifetime = 2592000;
+});
+```
 
 ---
 
-**Built with ❤️ for the .NET community**
+## 🏗️ Architecture
 
-**TrustIdentity** - Enterprise Identity & Access Management, AI/ML-Powered.
+```
+TrustIdentity.AspNetCore/
+├── Endpoints/          # HTTP endpoints
+├── Middleware/         # ASP.NET Core middleware
+├── Extensions/         # Service/app extensions
+└── Handlers/          # Request handlers
+```
+
+---
+
+## 📚 Documentation
+
+- **[Setup Guide](../../../SETUP_GUIDE.md)** - Complete setup
+- **[Database Setup](../../../DATABASE_SETUP.md)** - Database configuration
+
+---
+
+## 📄 License
+
+Apache 2.0 - See [LICENSE](../../../LICENSE)

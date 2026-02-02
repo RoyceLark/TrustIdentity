@@ -47,6 +47,8 @@ public class Token
     public ClaimsIdentity? Subject { get; set; }
     /// <summary>Confirmation method (e.g. cnf)</summary>
     public string? ConfirmationMethod { get; set; }
+    /// <summary>DPoP JWK Thumbprint (jkt)</summary>
+    public string? DPoPThumbprint { get; set; }
     /// <summary>Version of the token</summary>
     public string Version { get; set; } = "1.0";
     /// <summary>Additional properties</summary>

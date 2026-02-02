@@ -181,13 +181,9 @@ app.UseTrustIdentityDDoSProtection(new TrustIdentity.AspNetCore.Middleware.DDoSP
 });
 
 // 2. Rate Limiting (Control legitimate traffic)
-app.UseTrustIdentityRateLimiting(new TrustIdentity.AspNetCore.Middleware.RateLimitingOptions
-{
-    Enabled = true,
-    Window = TimeSpan.FromMinutes(1),
-    PermitLimit = 100, // 100 requests per minute per IP
-    QueueLimit = 0
-});
+var rateLimitOptions = new TrustIdentity.AspNetCore.Middleware.RateLimitingOptions();
+builder.Configuration.GetSection("TrustIdentity:RateLimiting").Bind(rateLimitOptions);
+app.UseTrustIdentityRateLimiting(rateLimitOptions);
 
 // 3. Security Headers
 app.UseTrustIdentitySecurityHeaders();

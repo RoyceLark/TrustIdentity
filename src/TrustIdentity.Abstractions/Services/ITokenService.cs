@@ -14,8 +14,9 @@ public interface ITokenService
     /// <param name="client">The client requesting the token</param>
     /// <param name="user">The user for whom the token is being created</param>
     /// <param name="scopes">The requested scopes</param>
+    /// <param name="dpopJkt">Optional DPoP JWK thumbprint for token binding</param>
     /// <returns>A token object</returns>
-    Task<Token> CreateAccessTokenAsync(Client client, User user, IEnumerable<string> scopes);
+    Task<Token> CreateAccessTokenAsync(Client client, User user, IEnumerable<string> scopes, string? dpopJkt = null);
     
     /// <summary>
     /// Creates a refresh token for the specified client and user

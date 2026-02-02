@@ -1,38 +1,23 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>oidc;oauth2;identity;server;security;saml;ai;fraud-detection;ml</PackageTags>
+    <Description>AI-powered fraud detection and behavior analysis for TrustIdentity.</Description>
   </PropertyGroup>
-
   <ItemGroup>
-    <None Remove="README.md" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="README.md" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="../TrustIdentity.Abstractions/TrustIdentity.Abstractions.csproj" />
     <ProjectReference Include="../TrustIdentity.Core/TrustIdentity.Core.csproj" />
     <ProjectReference Include="..\TrustIdentity.ML\TrustIdentity.ML.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
     <PackageReference Include="Microsoft.ML" Version="5.0.0" />
   </ItemGroup>
-
 </Project>

@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,14 +18,15 @@ public class RateLimitingMiddleware
     private readonly RequestDelegate _next;
     private readonly ILogger<RateLimitingMiddleware> _logger;
     private readonly RateLimitingOptions _options;
+    private readonly IDistributedCache? _cache;
     
-    // In-memory storage for rate limiting (use Redis in production for distributed scenarios)
-    private static readonly ConcurrentDictionary<string, ClientRateLimit> _clientLimits = new();
+    // In-memory storage for rate limiting (fallback)
+    private static readonly ConcurrentDictionary<string, ClientRateLimit> _memoryLimits = new();
     private static readonly Timer _cleanupTimer;
     
     static RateLimitingMiddleware()
     {
-        // Cleanup expired entries every 5 minutes
+        // Cleanup expired entries every 5 minutes (for in-memory fallback)
         _cleanupTimer = new Timer(CleanupExpiredEntries, null, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5));
     }
 
@@ -33,11 +36,22 @@ public class RateLimitingMiddleware
     public RateLimitingMiddleware(
         RequestDelegate next,
         ILogger<RateLimitingMiddleware> logger,
-        RateLimitingOptions options)
+        RateLimitingOptions options,
+        IServiceProvider serviceProvider)
     {
         _next = next;
         _logger = logger;
         _options = options;
+        _cache = serviceProvider.GetService(typeof(IDistributedCache)) as IDistributedCache;
+        
+        if (_cache != null)
+        {
+            _logger.LogInformation("RateLimitingMiddleware initialized with Distributed Cache");
+        }
+        else
+        {
+            _logger.LogWarning("RateLimitingMiddleware initialized with In-Memory Cache (Not suitable for multi-server)");
+        }
     }
 
     /// <summary>
@@ -53,49 +67,35 @@ public class RateLimitingMiddleware
 
         var clientId = GetClientIdentifier(context);
         var endpoint = GetEndpointIdentifier(context);
-        var key = $"{clientId}:{endpoint}";
-
-        var limit = _clientLimits.GetOrAdd(key, _ => new ClientRateLimit
-        {
-            WindowStart = DateTime.UtcNow,
-            RequestCount = 0
-        });
+        
+        // Use endpoint-specific limit
+        var permitLimit = _options.GetEndpointLimit(endpoint);
+        var window = _options.Window;
 
         bool isRateLimited = false;
         int remaining = 0;
+        long resetTime = 0;
         
-        lock (limit)
+        if (_cache != null)
         {
-            // Reset window if expired
-            if (DateTime.UtcNow - limit.WindowStart > _options.Window)
-            {
-                limit.WindowStart = DateTime.UtcNow;
-                limit.RequestCount = 0;
-            }
-
-            // Check if limit exceeded
-            if (limit.RequestCount >= _options.PermitLimit)
-            {
-                isRateLimited = true;
-            }
-            else
-            {
-                // Increment request count
-                limit.RequestCount++;
-                remaining = Math.Max(0, _options.PermitLimit - limit.RequestCount);
-            }
-            
-            // Add rate limit headers
-            context.Response.OnStarting(() =>
-            {
-                context.Response.Headers["X-RateLimit-Limit"] = _options.PermitLimit.ToString();
-                context.Response.Headers["X-RateLimit-Remaining"] = remaining.ToString();
-                context.Response.Headers["X-RateLimit-Reset"] = new DateTimeOffset(limit.WindowStart.Add(_options.Window)).ToUnixTimeSeconds().ToString();
-                return Task.CompletedTask;
-            });
+            // Distributed Rate Limiting
+            (isRateLimited, remaining, resetTime) = await CheckDistributedLimitAsync(clientId, endpoint, permitLimit, window);
+        }
+        else
+        {
+            // In-Memory Rate Limiting
+            (isRateLimited, remaining, resetTime) = CheckMemoryLimit(clientId, endpoint, permitLimit, window);
         }
 
-        // Handle rate limit response outside of lock
+        // Add rate limit headers
+        context.Response.OnStarting(() =>
+        {
+            context.Response.Headers["X-RateLimit-Limit"] = permitLimit.ToString();
+            context.Response.Headers["X-RateLimit-Remaining"] = remaining.ToString();
+            context.Response.Headers["X-RateLimit-Reset"] = resetTime.ToString();
+            return Task.CompletedTask;
+        });
+
         if (isRateLimited)
         {
             _logger.LogWarning(
@@ -103,19 +103,89 @@ public class RateLimitingMiddleware
                 clientId, endpoint);
 
             context.Response.StatusCode = 429; // Too Many Requests
-            context.Response.Headers["Retry-After"] = ((int)_options.Window.TotalSeconds).ToString();
+            context.Response.Headers["Retry-After"] = ((int)window.TotalSeconds).ToString();
             
             await context.Response.WriteAsJsonAsync(new
             {
                 error = "rate_limit_exceeded",
                 error_description = "Too many requests. Please try again later.",
-                retry_after = (int)_options.Window.TotalSeconds
+                retry_after = (int)window.TotalSeconds
             });
             
             return;
         }
 
         await _next(context);
+    }
+
+    private async Task<(bool Limited, int Remaining, long Reset)> CheckDistributedLimitAsync(string clientId, string endpoint, int limit, TimeSpan window)
+    {
+        var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        
+        // Fixed window strategy: Key includes the precise time window
+        // e.g. "ratelimit:client:123:endpoint:token:1738000" (window ID)
+        var windowId = now / (long)window.TotalSeconds;
+        var key = $"ratelimit:{clientId}:{endpoint}:{windowId}";
+        
+        // Get current count
+        var countBytes = await _cache!.GetAsync(key);
+        int count = 0;
+        
+        if (countBytes != null)
+        {
+            count = BitConverter.ToInt32(countBytes, 0);
+        }
+        
+        // Check limit
+        if (count >= limit)
+        {
+            var reset = (windowId + 1) * (long)window.TotalSeconds;
+            return (true, 0, reset);
+        }
+        
+        // Increment (atomic in Redis usually, here we do best-effort read-modify-write)
+        count++;
+        await _cache.SetAsync(key, BitConverter.GetBytes(count), new DistributedCacheEntryOptions
+        {
+            AbsoluteExpiration = DateTimeOffset.FromUnixTimeSeconds((windowId + 1) * (long)window.TotalSeconds)
+        });
+        
+        var resetTime = (windowId + 1) * (long)window.TotalSeconds;
+        return (false, Math.Max(0, limit - count), resetTime);
+    }
+
+    private (bool Limited, int Remaining, long Reset) CheckMemoryLimit(string clientId, string endpoint, int limit, TimeSpan window)
+    {
+        var key = $"{clientId}:{endpoint}";
+        var limitEntry = _memoryLimits.GetOrAdd(key, _ => new ClientRateLimit
+        {
+            WindowStart = DateTime.UtcNow,
+            RequestCount = 0
+        });
+
+        lock (limitEntry)
+        {
+            // Reset window if expired
+            if (DateTime.UtcNow - limitEntry.WindowStart > window)
+            {
+                limitEntry.WindowStart = DateTime.UtcNow;
+                limitEntry.RequestCount = 0;
+            }
+
+            var resetTime = new DateTimeOffset(limitEntry.WindowStart.Add(window)).ToUnixTimeSeconds();
+
+            // Check if limit exceeded
+            if (limitEntry.RequestCount >= limit)
+            {
+                return (true, 0, resetTime);
+            }
+            
+            // Increment
+            limitEntry.RequestCount++;
+            var remaining = Math.Max(0, limit - limitEntry.RequestCount);
+            
+            return (false, remaining, resetTime);
+        }
     }
 
     private string GetClientIdentifier(HttpContext context)
@@ -162,14 +232,14 @@ public class RateLimitingMiddleware
     private static void CleanupExpiredEntries(object? state)
     {
         var now = DateTime.UtcNow;
-        var expiredKeys = _clientLimits
+        var expiredKeys = _memoryLimits
             .Where(kvp => now - kvp.Value.WindowStart > TimeSpan.FromHours(1))
             .Select(kvp => kvp.Key)
             .ToList();
 
         foreach (var key in expiredKeys)
         {
-            _clientLimits.TryRemove(key, out _);
+            _memoryLimits.TryRemove(key, out _);
         }
     }
 }
@@ -190,7 +260,7 @@ public class RateLimitingOptions
     public TimeSpan Window { get; set; } = TimeSpan.FromMinutes(1);
 
     /// <summary>
-    /// Maximum number of requests per window
+    /// Maximum number of requests per window (default limit)
     /// </summary>
     public int PermitLimit { get; set; } = 100;
 
@@ -198,6 +268,30 @@ public class RateLimitingOptions
     /// Queue limit (0 = no queue)
     /// </summary>
     public int QueueLimit { get; set; } = 0;
+
+    /// <summary>
+    /// Endpoint-specific rate limits (overrides PermitLimit for specific endpoints)
+    /// </summary>
+    public Dictionary<string, int> EndpointLimits { get; set; } = new()
+    {
+        // Stricter limits for sensitive endpoints
+        ["/connect/token"] = 10,        // Token endpoint: 10 req/min
+        ["/connect/authorize"] = 20,    // Authorize endpoint: 20 req/min
+        ["/connect/introspect"] = 30,   // Introspection: 30 req/min
+        ["/connect/revoke"] = 20,       // Revocation: 20 req/min
+        ["/saml"] = 20,                 // SAML: 20 req/min
+        ["/wsfed"] = 20                 // WS-Federation: 20 req/min
+    };
+
+    /// <summary>
+    /// Gets the rate limit for a specific endpoint
+    /// </summary>
+    /// <param name="endpoint">The endpoint path</param>
+    /// <returns>The rate limit for the endpoint</returns>
+    public int GetEndpointLimit(string endpoint)
+    {
+        return EndpointLimits.TryGetValue(endpoint, out var limit) ? limit : PermitLimit;
+    }
 }
 
 /// <summary>

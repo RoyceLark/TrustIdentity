@@ -1,9 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageTags>oidc;oauth2;identity;server;security;licensing</PackageTags>
+    <Description>License verification and enforcement engine for TrustIdentity.</Description>
   </PropertyGroup>
 
   <ItemGroup>

@@ -67,7 +67,7 @@ public class TokenService : ITokenService
     /// <summary>
     /// Creates a new access token for a client and user
     /// </summary>
-    public Task<Token> CreateAccessTokenAsync(Client client, User user, IEnumerable<string> scopes)
+    public Task<Token> CreateAccessTokenAsync(Client client, User user, IEnumerable<string> scopes, string? dpopJkt = null)
     {
         var lifetime = client.AccessTokenLifetime > 0 ? client.AccessTokenLifetime : _options.Authentication.AccessTokenLifetime;
         
@@ -87,7 +87,8 @@ public class TokenService : ITokenService
             ClientId = client.ClientId,
             Scopes = scopes.ToList(),
             IssuedAt = DateTime.UtcNow,
-            ExpiresAt = DateTime.UtcNow.AddSeconds(lifetime)
+            ExpiresAt = DateTime.UtcNow.AddSeconds(lifetime),
+            DPoPThumbprint = dpopJkt // ✅ Set DPoP thumbprint if provided
         };
 
         return Task.FromResult(token);
@@ -136,6 +137,15 @@ public class TokenService : ITokenService
         foreach (var scope in token.Scopes)
         {
             claims.Add(new Claim("scope", scope));
+        }
+
+        // ✅ Add DPoP confirmation claim if thumbprint is present
+        if (!string.IsNullOrEmpty(token.DPoPThumbprint))
+        {
+            // cnf: { "jkt": "..." }
+            var cnfJson = System.Text.Json.JsonSerializer.Serialize(new { jkt = token.DPoPThumbprint });
+            // Using "cnf" claim type
+            claims.Add(new Claim("cnf", cnfJson, JsonClaimValueTypes.Json));
         }
 
         SigningCredentials credentials;
@@ -197,10 +207,11 @@ public class TokenService : ITokenService
             var validationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
-                ValidateAudience = false,
+                ValidateAudience = true, // ✅ SECURITY ENHANCEMENT: Validate audience to prevent token misuse
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = _issuer,
+                ValidAudience = _issuer, // Accept tokens issued for this server
                 IssuerSigningKey = key,
                 ClockSkew = TimeSpan.FromMinutes(5)
             };

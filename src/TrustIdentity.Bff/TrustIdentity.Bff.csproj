@@ -5,11 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Authors>TrustIdentity Team</Authors>
-    <Company>TrustIdentity</Company>
-    <Product>TrustIdentity BFF</Product>
-    <Description>Backend-for-Frontend (BFF) pattern implementation for TrustIdentity - Simplifies SPA security by handling tokens server-side</Description>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageId>TrustIdentity.Bff</PackageId>
+    <Description>Backend-for-Frontend (BFF) pattern implementation for TrustIdentity - Simplifies SPA security by handling tokens server-side.</Description>
+    <PackageTags>oidc;oauth2;identity;server;security;bff;spa</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

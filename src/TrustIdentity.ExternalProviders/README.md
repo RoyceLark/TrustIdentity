@@ -1,144 +1,256 @@
-# TrustIdentity - Complete Identity & Access Management for .NET
+# TrustIdentity.ExternalProviders
 
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
-[![.NET](https://img.shields.io/badge/.NET-9.0%20%7C%2010.0-512BD4)](https://dotnet.microsoft.com/)
-[![NuGet](https://img.shields.io/badge/NuGet-1.0.0-blue)](https://www.nuget.org/packages/TrustIdentity.Server)
-
-**TrustIdentity** is a complete, production-ready OpenID Connect and OAuth 2.0 framework for .NET 9/10 with advanced AI/ML capabilities. Built with 100% feature parity to Other IdentityServer, plus unique fraud detection and behavioral analysis features.
-
-## 🎯 One-Command Installation
-
-```bash
-dotnet add package TrustIdentity.Server
-```
-
-That's it! One package includes everything.
-
-## ✨ Key Features
-
-### 🌐 Complete Protocol Support
-- ✅ **OpenID Connect (OIDC)** 1.0
-- ✅ **OAuth 2.0** (RFC 6749)
-- ✅ **SAML 2.0** (Identity Provider & Service Provider)
-- ✅ **WS-Federation** 1.2
-- ✅ **All 8 Grant Types**: Authorization Code, Client Credentials, Implicit, Hybrid, ROPC, Device Flow, Refresh Token, Token Exchange
-
-### 🔐 Production-Grade Security
-- ✅ **PKCE** (RFC 7636) & **DPoP** (RFC 9449)
-- ✅ **PAR** (RFC 9126) & **mTLS** (RFC 8705)
-- ✅ **JWT & Reference tokens**
-- ✅ **Token Encryption & Signing** (RSA, EC)
-- ✅ **Key Management** & Automatic Rotation
-- ✅ **Security Headers** & Rate Limiting
-- ✅ **CORS** & Account Lockout
-
-### 🧠 AI/ML Capabilities (Unique!)
-- ✅ **Real-time fraud detection** with ML.NET
-- ✅ **Behavioral analysis** - pattern recognition
-- ✅ **Risk scoring** - composite risk calculation
-- ✅ **Adaptive authentication** - AI-driven MFA
-- ✅ **Anomaly detection** - suspicious activity alerts
-- ✅ **Device fingerprinting** - track user devices
-
-### 💾 Enterprise Storage
-- ✅ **Entity Framework Core**
-- ✅ SQL Server, PostgreSQL, MySQL, SQLite
-- ✅ In-memory stores for development
-- ✅ Distributed caching (Redis)
-
-## 🚀 Quick Start
-
-```csharp
-using TrustIdentity.AspNetCore.Extensions;
-
-var builder = WebApplication.CreateBuilder(args);
-
-// Add TrustIdentity with AI/ML
-builder.Services.AddTrustIdentity(options =>
-{
-    options.IssuerUri = "https://localhost:5001";
-    options.EnableAI = true;
-    options.EnableFraudDetection = true;
-})
-.AddInMemoryClients(Config.Clients)
-.AddInMemoryIdentityResources(Config.IdentityResources)
-.AddInMemoryApiScopes(Config.ApiScopes)
-.AddDeveloperSigningCredential()
-.AddAIFraudDetection()
-.AddBehaviorAnalysis()
-.AddRiskScoring();
-
-var app = builder.Build();
-app.UseTrustIdentity();
-app.Run();
-```
-
-## 📦 Package Structure
-
-**TrustIdentity.Server** (meta-package) includes:
-
-- `TrustIdentity.Abstractions` - Core interfaces
-- `TrustIdentity.Core` - Business logic & models
-- `TrustIdentity.Storage` - EF Core persistence
-- `TrustIdentity.AspNetCore` - Web integration
-- `TrustIdentity.Saml` - SAML 2.0 implementation
-- `TrustIdentity.WsFederation` - WS-Federation implementation
-- `TrustIdentity.AI` - AI fraud detection
-- `TrustIdentity.ML` - ML.NET models
-
-## 🎓 Documentation
-
-- [Getting Started](docs/getting-started.md)
-- [OIDC & OAuth 2.0 Guide](docs/oidc-oauth.md)
-- [SAML 2.0 Guide](src/TrustIdentity.Saml/README.md)
-- [WS-Federation Guide](src/TrustIdentity.WsFederation/README.md)
-- [NuGet Publishing Guide](docs/NUGET_GUIDE.md)
-- [Project Overview](PROJECT_OVERVIEW.md)
-- [Contributing](CONTRIBUTING.md)
-
-## 💡 Why TrustIdentity?
-
-| Feature | Others | TrustIdentity |
-|---------|--------|---------------|
-| OAuth 2.0 / OIDC | ✅ | ✅ |
-| **SAML 2.0** | ✅ | ✅ |
-| **WS-Federation** | ✅ | ✅ |
-| All Grant Types | ✅ | ✅ |
-| EF Core Storage | ✅ | ✅ |
-| **AI Fraud Detection** | ❌ | ✅ |
-| **Behavioral Analysis** | ❌ | ✅ |
-| **Risk Scoring** | ❌ | ✅ |
-| **License** | Commercial | **Apache 2.0 (FREE)** |
-| **Cost** | $1,500+/year | **$0** |
-
-##  Roadmap
-
-- [x] Complete OAuth 2.0 & OpenID Connect
-- [x] AI/ML fraud detection
-- [x] Entity Framework Core support
-- [x] SAML 2.0 support
-- [x] WS-Federation support
-- [ ] Azure AD B2C compatibility (External Provider)
-- [ ] Admin UI
-- [ ] Multi-tenancy
-
-## 📄 License
-
-Apache 2.0 - See [LICENSE](LICENSE) for details.
-This project is completely free and open source. No license fees, ever.
-
-## 🤝 Contributing
-
-Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-## 🌟 Support
-
-- 📧 Email: web.html123@gmail.com
-- 💬 Discussions: [GitHub Discussions](https://github.com/roycelark/trustidentity/discussions)
-- 🐛 Issues: [GitHub Issues](https://github.com/roycelark/trustidentity/issues)
+**External identity provider integration**
 
 ---
 
-**Built with ❤️ for the .NET community**
+## 📦 Overview
 
-**TrustIdentity** - Enterprise Identity & Access Management, AI/ML-Powered.
+`TrustIdentity.ExternalProviders` enables integration with external identity providers like Azure AD, Google, Facebook, and GitHub for federated authentication.
+
+---
+
+## ✨ Supported Providers
+
+- ✅ **Azure AD** - Microsoft Azure Active Directory
+- ✅ **Azure AD B2C** - Azure AD B2C tenants
+- ✅ **Google** - Google authentication
+- ✅ **Facebook** - Facebook login
+- ✅ **GitHub** - GitHub authentication
+- ✅ **Generic OIDC** - Any OpenID Connect provider
+
+---
+
+## 🚀 Installation
+
+```bash
+dotnet add package TrustIdentity.ExternalProviders
+```
+
+---
+
+## 🔧 Usage
+
+### Azure AD
+
+```csharp
+using TrustIdentity.ExternalProviders.Extensions;
+
+builder.Services.AddTrustIdentity(options => { ... })
+    .AddExternalProvider("AzureAD", options =>
+    {
+        options.ClientId = "your-azure-client-id";
+        options.ClientSecret = "your-azure-client-secret";
+        options.TenantId = "your-tenant-id";
+        options.CallbackPath = "/signin-azuread";
+    });
+```
+
+### Google
+
+```csharp
+builder.Services.AddTrustIdentity(options => { ... })
+    .AddExternalProvider("Google", options =>
+    {
+        options.ClientId = "your-google-client-id.apps.googleusercontent.com";
+        options.ClientSecret = "your-google-client-secret";
+        options.CallbackPath = "/signin-google";
+    });
+```
+
+### Facebook
+
+```csharp
+builder.Services.AddTrustIdentity(options => { ... })
+    .AddExternalProvider("Facebook", options =>
+    {
+        options.AppId = "your-facebook-app-id";
+        options.AppSecret = "your-facebook-app-secret";
+        options.CallbackPath = "/signin-facebook";
+    });
+```
+
+### GitHub
+
+```csharp
+builder.Services.AddTrustIdentity(options => { ... })
+    .AddExternalProvider("GitHub", options =>
+    {
+        options.ClientId = "your-github-client-id";
+        options.ClientSecret = "your-github-client-secret";
+        options.CallbackPath = "/signin-github";
+    });
+```
+
+---
+
+## 📋 Configuration
+
+### Azure AD B2C
+
+```csharp
+builder.Services.AddExternalProvider("AzureADB2C", options =>
+{
+    options.Instance = "https://yourtenant.b2clogin.com";
+    options.Domain = "yourtenant.onmicrosoft.com";
+    options.TenantId = "your-tenant-id";
+    options.ClientId = "your-client-id";
+    options.ClientSecret = "your-client-secret";
+    options.SignUpSignInPolicyId = "B2C_1_signupsignin";
+    options.CallbackPath = "/signin-azureadb2c";
+});
+```
+
+### Generic OIDC Provider
+
+```csharp
+builder.Services.AddExternalProvider("CustomOIDC", options =>
+{
+    options.Authority = "https://custom-idp.example.com";
+    options.ClientId = "your-client-id";
+    options.ClientSecret = "your-client-secret";
+    options.ResponseType = "code";
+    options.Scope.Add("openid");
+    options.Scope.Add("profile");
+    options.Scope.Add("email");
+    options.CallbackPath = "/signin-custom";
+});
+```
+
+---
+
+## 🎯 Use Cases
+
+### Social Login
+
+Allow users to login with their social accounts:
+
+```csharp
+builder.Services.AddTrustIdentity(options => { ... })
+    .AddExternalProvider("Google", googleOptions)
+    .AddExternalProvider("Facebook", facebookOptions)
+    .AddExternalProvider("GitHub", githubOptions);
+```
+
+### Enterprise Federation
+
+Integrate with corporate identity providers:
+
+```csharp
+builder.Services.AddTrustIdentity(options => { ... })
+    .AddExternalProvider("AzureAD", azureOptions)
+    .AddExternalProvider("Okta", oktaOptions)
+    .AddExternalProvider("Auth0", auth0Options);
+```
+
+---
+
+## 🔧 Advanced Configuration
+
+### Claims Mapping
+
+```csharp
+builder.Services.AddExternalProvider("Google", options =>
+{
+    options.ClientId = "...";
+    options.ClientSecret = "...";
+    
+    // Map external claims to internal claims
+    options.ClaimActions.MapJsonKey("picture", "picture");
+    options.ClaimActions.MapJsonKey("locale", "locale");
+    
+    // Save tokens
+    options.SaveTokens = true;
+    
+    // Additional scopes
+    options.Scope.Add("https://www.googleapis.com/auth/userinfo.profile");
+});
+```
+
+### Custom Events
+
+```csharp
+builder.Services.AddExternalProvider("AzureAD", options =>
+{
+    options.Events = new OAuthEvents
+    {
+        OnCreatingTicket = async context =>
+        {
+            // Custom logic after successful authentication
+            var email = context.Principal.FindFirst(ClaimTypes.Email)?.Value;
+            await CreateOrUpdateUserAsync(email);
+        },
+        
+        OnRemoteFailure = async context =>
+        {
+            // Handle authentication failures
+            await LogFailureAsync(context.Failure);
+        }
+    };
+});
+```
+
+---
+
+## 📊 Provider Setup Guides
+
+### Google Setup
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com)
+2. Create a new project
+3. Enable Google+ API
+4. Create OAuth 2.0 credentials
+5. Add authorized redirect URI: `https://yourdomain.com/signin-google`
+6. Copy Client ID and Client Secret
+
+### Azure AD Setup
+
+1. Go to [Azure Portal](https://portal.azure.com)
+2. Navigate to Azure Active Directory
+3. Go to App registrations → New registration
+4. Add redirect URI: `https://yourdomain.com/signin-azuread`
+5. Create a client secret
+6. Copy Application (client) ID, Directory (tenant) ID, and client secret
+
+### Facebook Setup
+
+1. Go to [Facebook Developers](https://developers.facebook.com)
+2. Create a new app
+3. Add Facebook Login product
+4. Configure OAuth redirect URI: `https://yourdomain.com/signin-facebook`
+5. Copy App ID and App Secret
+
+### GitHub Setup
+
+1. Go to [GitHub Settings](https://github.com/settings/developers)
+2. Create a new OAuth App
+3. Set Authorization callback URL: `https://yourdomain.com/signin-github`
+4. Copy Client ID and Client Secret
+
+---
+
+## 🏗️ Architecture
+
+```
+TrustIdentity.ExternalProviders/
+├── Providers/         # Provider implementations
+│   ├── AzureADProvider.cs
+│   ├── GoogleProvider.cs
+│   ├── FacebookProvider.cs
+│   └── GitHubProvider.cs
+├── Extensions/       # Configuration extensions
+└── Models/          # Provider models
+```
+
+---
+
+## 📚 Documentation
+
+- **[External Providers Guide](../../../EXTERNAL_PROVIDERS_GUIDE.md)** - Detailed setup
+- **[Setup Guide](../../../SETUP_GUIDE.md)** - General setup
+
+---
+
+## 📄 License
+
+Apache 2.0 - See [LICENSE](../../../LICENSE)

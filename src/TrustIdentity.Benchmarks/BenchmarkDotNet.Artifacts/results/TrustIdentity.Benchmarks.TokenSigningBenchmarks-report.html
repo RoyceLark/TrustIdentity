@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>TrustIdentity.Benchmarks.TokenSigningBenchmarks-20260202-125856</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.15.8, Windows 11 (10.0.26200.6584/25H2/2025Update/HudsonValley2)
+12th Gen Intel Core i7-12800H 2.40GHz, 1 CPU, 20 logical and 14 physical cores
+.NET SDK 10.0.102
+  [Host]     : .NET 10.0.2 (10.0.2, 10.0.225.61305), X64 RyuJIT x86-64-v3
+  Job-YFEFPZ : .NET 10.0.2 (10.0.2, 10.0.225.61305), X64 RyuJIT x86-64-v3
+</code></pre>
+<pre><code>IterationCount=10  WarmupCount=3  
+</code></pre>
+
+<table>
+<thead><tr><th>Method     </th><th>Mean</th><th>Error</th><th>StdDev</th><th>Gen0</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>SignJwtRsa256</td><td>1,023.1 &mu;s</td><td>42.33 &mu;s</td><td>22.14 &mu;s</td><td>1.9531</td><td>27.79 KB</td>
+</tr><tr><td>SignJwtES256</td><td>312.3 &mu;s</td><td>15.69 &mu;s</td><td>10.38 &mu;s</td><td>1.9531</td><td>24.52 KB</td>
+</tr><tr><td>ValidateJwtRsa256</td><td>984.6 &mu;s</td><td>45.92 &mu;s</td><td>30.38 &mu;s</td><td>1.9531</td><td>38.88 KB</td>
+</tr></tbody></table>
+</body>
+</html>

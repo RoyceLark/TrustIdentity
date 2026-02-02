@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet" integrity="sha384-blOohCVdhjmtROpu8+CfTnUWham9nkX7P7OZQMst+RUnhtoY/9qemFAkIKOYxDI3" crossorigin="anonymous" referrerpolicy="no-referrer">
     
     <style>
         :root {
@@ -24,7 +24,15 @@
             --border: #e2e8f0;
         }
 
-        @Html.Raw(ViewData["CustomCss"] ?? "")
+        @{
+            var customCss = ViewData["CustomCss"] as string ?? "";
+            // Security: Prevent XSS by escaping closing style tags
+            if (customCss.Contains("</style", StringComparison.OrdinalIgnoreCase))
+            {
+                customCss = customCss.Replace("</style", "/* style tag blocked */", StringComparison.OrdinalIgnoreCase);
+            }
+        }
+        @Html.Raw(customCss)
 
         * {
             margin: 0;

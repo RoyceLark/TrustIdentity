@@ -85,6 +85,12 @@ public static class ServiceCollectionExtensions
         services.AddScoped<TrustIdentity.Core.Validation.AuthorizeRequestValidator>();
         services.AddScoped<TrustIdentity.Core.Validation.TokenRequestValidator>();
 
+        // Extensibility services 
+        services.AddScoped<IProfileService, DefaultProfileService>();
+        services.AddScoped<IEventSink, DefaultEventSink>();
+        services.AddScoped<IEventService, DefaultEventService>();
+        services.AddScoped<ICorsPolicyService, DefaultCorsPolicyService>();
+
         // Rate limiting
         services.AddRateLimiter(rateLimiterOptions =>
         {
@@ -242,6 +248,138 @@ public class TrustIdentityBuilder
     public TrustIdentityBuilder AddRiskScoring()
     {
         // Services.AddSingleton<TrustIdentity.AI.Analyzers.RiskScoringService>();
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a custom profile service
+    /// </summary>
+    /// <typeparam name="T">The profile service type</typeparam>
+    /// <returns>The builder</returns>
+    public TrustIdentityBuilder AddProfileService<T>() where T : class, IProfileService
+    {
+        Services.AddScoped<IProfileService, T>();
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a custom resource owner password validator
+    /// </summary>
+    /// <typeparam name="T">The validator type</typeparam>
+    /// <returns>The builder</returns>
+    public TrustIdentityBuilder AddResourceOwnerValidator<T>() where T : class, IResourceOwnerPasswordValidator
+    {
+        Services.AddScoped<IResourceOwnerPasswordValidator, T>();
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a custom event sink
+    /// </summary>
+    /// <typeparam name="T">The event sink type</typeparam>
+    /// <returns>The builder</returns>
+    public TrustIdentityBuilder AddEventSink<T>() where T : class, IEventSink
+    {
+        Services.AddScoped<IEventSink, T>();
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a custom token request validator
+    /// </summary>
+    /// <typeparam name="T">The validator type</typeparam>
+    /// <returns>The builder</returns>
+    public TrustIdentityBuilder AddCustomTokenRequestValidator<T>() where T : class, ICustomTokenRequestValidator
+    {
+        Services.AddScoped<ICustomTokenRequestValidator, T>();
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a custom authorize request validator
+    /// </summary>
+    /// <typeparam name="T">The validator type</typeparam>
+    /// <returns>The builder</returns>
+    public TrustIdentityBuilder AddCustomAuthorizeRequestValidator<T>() where T : class, ICustomAuthorizeRequestValidator
+    {
+        Services.AddScoped<ICustomAuthorizeRequestValidator, T>();
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a custom authorize interaction response generator
+    /// </summary>
+    /// <typeparam name="T">The generator type</typeparam>
+    /// <returns>The builder</returns>
+    public TrustIdentityBuilder AddAuthorizeInteractionResponseGenerator<T>() where T : class, IAuthorizeInteractionResponseGenerator
+    {
+        Services.AddScoped<IAuthorizeInteractionResponseGenerator, T>();
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a custom CORS policy service
+    /// </summary>
+    /// <typeparam name="T">The service type</typeparam>
+    /// <returns>The builder</returns>
+    public TrustIdentityBuilder AddCorsPolicyService<T>() where T : class, ICorsPolicyService
+    {
+        Services.AddScoped<ICorsPolicyService, T>();
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a custom token creation service
+    /// </summary>
+    /// <typeparam name="T">The service type</typeparam>
+    /// <returns>The builder</returns>
+    public TrustIdentityBuilder AddTokenCreationService<T>() where T : class, ITokenCreationService
+    {
+        Services.AddScoped<ITokenCreationService, T>();
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a custom token response generator
+    /// </summary>
+    /// <typeparam name="T">The generator type</typeparam>
+    /// <returns>The builder</returns>
+    public TrustIdentityBuilder AddTokenResponseGenerator<T>() where T : class, ITokenResponseGenerator
+    {
+        Services.AddScoped<ITokenResponseGenerator, T>();
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a custom claims service
+    /// </summary>
+    /// <typeparam name="T">The service type</typeparam>
+    /// <returns>The builder</returns>
+    public TrustIdentityBuilder AddClaimsService<T>() where T : class, IClaimsService
+    {
+        Services.AddScoped<IClaimsService, T>();
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a custom consent service
+    /// </summary>
+    /// <typeparam name="T">The service type</typeparam>
+    /// <returns>The builder</returns>
+    public TrustIdentityBuilder AddConsentService<T>() where T : class, IConsentService
+    {
+        Services.AddScoped<IConsentService, T>();
+        return this;
+    }
+
+    /// <summary>
+    /// Adds a custom return URL parser
+    /// </summary>
+    /// <typeparam name="T">The parser type</typeparam>
+    /// <returns>The builder</returns>
+    public TrustIdentityBuilder AddReturnUrlParser<T>() where T : class, IReturnUrlParser
+    {
+        Services.AddScoped<IReturnUrlParser, T>();
         return this;
     }
 

@@ -1,0 +1,19 @@
+<Project>
+  <PropertyGroup>
+    <Version>1.0.1</Version>
+    <Authors>RoyceLark TrustIdentity Team</Authors>
+    <Company>Royce Lark</Company>
+    <PackageProjectUrl>https://github.com/roycelark/TrustIdentity</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/roycelark/TrustIdentity</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>icon.png</PackageIcon>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>
