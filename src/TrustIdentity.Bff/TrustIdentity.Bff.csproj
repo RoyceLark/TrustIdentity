@@ -5,10 +5,14 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageId>TrustIdentity.Bff</PackageId>
+    <PackageTags>$(PackageTags);bff;spa</PackageTags>
     <Description>Backend-for-Frontend (BFF) pattern implementation for TrustIdentity - Simplifies SPA security by handling tokens server-side.</Description>
-    <PackageTags>oidc;oauth2;identity;server;security;bff;spa</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TrustIdentity.Abstractions\TrustIdentity.Abstractions.csproj" />

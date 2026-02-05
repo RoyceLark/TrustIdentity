@@ -4,13 +4,14 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageId>TrustIdentity.AspNetCore</PackageId>
-    <PackageTags>oidc;oauth2;identity;server;security;saml;ai;fraud-detection;aspnetcore;middleware</PackageTags>
+    <PackageTags>$(PackageTags);aspnetcore;middleware</PackageTags>
     <Description>ASP.NET Core middleware, tag helpers, and integration for TrustIdentity server.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
+ 
   <ItemGroup>
     <ProjectReference Include="../TrustIdentity.Abstractions/TrustIdentity.Abstractions.csproj" />
     <ProjectReference Include="../TrustIdentity.Core/TrustIdentity.Core.csproj" />

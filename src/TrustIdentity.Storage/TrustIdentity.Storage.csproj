@@ -5,13 +5,13 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>$(PackageTags);efcore;storage</PackageTags>
     <Description>Entity Framework Core and distributed caching storage implementations for TrustIdentity.</Description>
-    <PackageTags>oidc;oauth2;identity;server;security;saml;ai;fraud-detection;efcore;storage</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>

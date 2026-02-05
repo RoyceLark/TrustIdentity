@@ -1,17 +1,45 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>trust-id</AssemblyName>
+    <AssemblyName>TrustIdentity.Cli</AssemblyName>
     <RootNamespace>TrustIdentity.Cli</RootNamespace>
+    <!--<PackageReadmeFile>README.md</PackageReadmeFile>-->
+    
+    <!-- .NET Tool Configuration -->
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>TrustIdentity.Cli</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+    <IsPackable>true</IsPackable>
+    
+    <!-- Package Metadata -->
+    <Description>Command-line interface for managing TrustIdentity servers. Provides tools for client management, user administration, key generation, database migrations, and configuration management.</Description>
+    <PackageTags>$(PackageTags);cli;tool;command-line</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\TrustIdentity.Abstractions\TrustIdentity.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="nupkg\" />
   </ItemGroup>
 </Project>

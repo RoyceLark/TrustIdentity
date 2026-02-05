@@ -5,10 +5,15 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>$(PackageTags);saml</PackageTags>
     <Description>SAML 2.0 protocol support for TrustIdentity.</Description>
-    <PackageTags>oidc;oauth2;identity;server;security;saml;ai;fraud-detection</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <ProjectReference Include="../TrustIdentity.Abstractions/TrustIdentity.Abstractions.csproj" />
@@ -23,9 +28,6 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
-  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="SamlConstants.cs">

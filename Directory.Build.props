@@ -3,10 +3,22 @@
     <Version>1.0.1</Version>
     <Authors>RoyceLark TrustIdentity Team</Authors>
     <Company>Royce Lark</Company>
+    <Copyright>Copyright © Royce Lark 2026. All rights reserved.</Copyright>
     <PackageProjectUrl>https://github.com/roycelark/TrustIdentity</PackageProjectUrl>
     <RepositoryUrl>https://github.com/roycelark/TrustIdentity</RepositoryUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageIcon>icon.png</PackageIcon>
+    <PackageReleaseNotes>
+      - Full implementation of OAuth 2.0 and OpenID Connect 1.0.
+      - Integrated SAML 2.0 and WS-Federation support.
+      - Advanced AI/ML-driven fraud detection and behavioral analysis.
+      - FAPI 1.0 &amp; 2.0 (Security Profile) compliance.
+      - Support for PKCE, DPoP, Mutual TLS, PAR, and JAR.
+      - Entity Framework Core support for SQL Server, PostgreSQL, MySQL, and SQLite.
+      - Multi-tenant isolation and Backend-for-Frontend (BFF) patterns.
+      - Complete Admin UI and REST API for identity management.
+    </PackageReleaseNotes>
+    <PackageTags>oidc;oauth2;identity;server;security;saml;ai;fraud-detection</PackageTags>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>

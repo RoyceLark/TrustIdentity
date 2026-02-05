@@ -4,12 +4,12 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageTags>oidc;oauth2;identity;server;security;saml;ai;fraud-detection;ml</PackageTags>
+    <PackageTags>$(PackageTags);ml</PackageTags>
     <Description>AI-powered fraud detection and behavior analysis for TrustIdentity.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../TrustIdentity.Abstractions/TrustIdentity.Abstractions.csproj" />

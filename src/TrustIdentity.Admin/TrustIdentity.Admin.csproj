@@ -8,10 +8,19 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.2" />
   </ItemGroup>
   <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageId>TrustIdentity.Admin</PackageId>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
+    <PackageTags>$(PackageTags);admin;ui</PackageTags>
+    <Description>Complete administration interface for TrustIdentity - Manage clients, resources, users, and security settings.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 </Project>

@@ -5,13 +5,13 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>$(PackageTags);ws-fed;ws-federation</PackageTags>
     <Description>WS-Federation protocol support for TrustIdentity.</Description>
-    <PackageTags>oidc;oauth2;identity;server;security;ws-fed;ws-federation</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
