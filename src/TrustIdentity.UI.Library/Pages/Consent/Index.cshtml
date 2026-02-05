@@ -1,0 +1,75 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Consent Required";
+}
+
+<div class="auth-card">
+    <div class="auth-header">
+        <div class="auth-logo">
+            @if (!string.IsNullOrEmpty(Model.ClientLogoUrl))
+            {
+                <img src="@Model.ClientLogoUrl" alt="@Model.ClientName" style="width: 60px; height: 60px; border-radius: 12px;" />
+            }
+            else
+            {
+                <i class="fas fa-shield-check"></i>
+            }
+        </div>
+        <h1>Consent Required</h1>
+        <p><strong>@Model.ClientName</strong> is requesting access to your account</p>
+    </div>
+
+    <div class="auth-body">
+        <form method="post">
+            <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+            
+            <div class="mb-4">
+                <p class="text-sm text-gray-600 mb-3">This application will be able to:</p>
+                
+                @foreach (var scope in Model.Scopes)
+                {
+                    <div class="form-group">
+                        <label class="checkbox-label" style="display: flex; align-items: start; gap: 12px; padding: 12px; background: #f8fafc; border-radius: 8px; margin-bottom: 8px;">
+                            <input type="checkbox" 
+                                   name="Input.ScopesConsented" 
+                                   value="@scope.Name"
+                                   @(scope.Checked ? "checked" : "")
+                                   @(scope.Required ? "disabled" : "")
+                                   style="margin-top: 2px;" />
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; color: #0f172a;">@scope.DisplayName</div>
+                                <div style="font-size: 13px; color: #64748b; margin-top: 2px;">@scope.Description</div>
+                                @if (scope.Required)
+                                {
+                                    <span style="font-size: 11px; color: #6366f1; font-weight: 600;">REQUIRED</span>
+                                }
+                            </div>
+                        </label>
+                    </div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input asp-for="Input.RememberConsent" type="checkbox" />
+                    <span>Remember my decision</span>
+                </label>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <button type="submit" name="button" value="deny" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Deny
+                </button>
+                <button type="submit" name="button" value="allow" class="btn btn-primary">
+                    <i class="fas fa-check"></i> Allow
+                </button>
+            </div>
+
+            <div class="security-badge">
+                <i class="fas fa-lock"></i>
+                <span>Your data is protected and encrypted</span>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>Default UI Library for TrustIdentity - Provides pre-built login, consent, and account management screens with AI-powered fraud detection.</Description>
+    <PackageTags>$(PackageTags);ui;identity;razor-pages</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IsPackable>true</IsPackable>
+    <OutputType>Library</OutputType>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TrustIdentity.Abstractions\TrustIdentity.Abstractions.csproj" />
+    <ProjectReference Include="..\TrustIdentity.Core\TrustIdentity.Core.csproj" />
+    <ProjectReference Include="..\TrustIdentity.AspNetCore\TrustIdentity.AspNetCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>

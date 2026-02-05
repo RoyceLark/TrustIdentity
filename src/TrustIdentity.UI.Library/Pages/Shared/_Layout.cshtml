@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TrustIdentity</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link href="~/css/trust-identity.css" rel="stylesheet" asp-append-version="true" />
+    
+    <style>
+        :root {
+            --primary: @(ViewData["PrimaryColor"] ?? "#6366f1");
+            --primary-dark: @(ViewData["SecondaryColor"] ?? "#4f46e5");
+        }
+
+        @{
+            var customCss = ViewData["CustomCss"] as string ?? "";
+            if (customCss.Contains("</style", StringComparison.OrdinalIgnoreCase))
+            {
+                customCss = customCss.Replace("</style", "/* style tag blocked */", StringComparison.OrdinalIgnoreCase);
+            }
+        }
+        @Html.Raw(customCss)
+    </style>
+</head>
+<body>
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="auth-container">
+        @RenderBody()
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const forms = document.querySelectorAll('form');
+            
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    const submitBtn = form.querySelector('.btn-primary');
+                    if (submitBtn) {
+                        // Only add loading if form is valid
+                        if (form.checkValidity()) {
+                            submitBtn.classList.add('loading');
+                            // submitBtn.disabled = true; // Avoid disabling to allow form submission event to fire correctly
+                        }
+                    }
+                });
+            });
+
+            // Auto-focus first empty input
+            const inputs = document.querySelectorAll('.form-control');
+            for (let input of inputs) {
+                if (!input.value) {
+                    input.focus();
+                    break;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

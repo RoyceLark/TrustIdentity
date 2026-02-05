@@ -1,0 +1,62 @@
+@page
+@model ExternalLoginsModel
+@{
+    ViewData["Title"] = "Connected Accounts";
+}
+
+<div class="auth-card">
+    <div class="auth-header" style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%);">
+        <div class="auth-logo">
+            <i class="fas fa-link-horizontal"></i>
+        </div>
+        <h1>Connected Accounts</h1>
+        <p>Manage third-party authentication providers linked to your profile</p>
+    </div>
+
+    <div class="auth-body">
+        @if (Model.CurrentLogins.Any())
+        {
+            <h3 style="font-size: 14px; font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;">Linked Providers</h3>
+            <div style="display: grid; gap: 12px; margin-bottom: 32px;">
+                @foreach (var login in Model.CurrentLogins)
+                {
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px;">
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <div style="width: 40px; height: 40px; border-radius: 10px; background: white; display: flex; align-items: center; justify-content: center; border: 1px solid #e2e8f0;">
+                                <i class="fab fa-@login.Name.ToLower()" style="font-size: 20px;"></i>
+                            </div>
+                            <span style="font-weight: 700; color: #1e293b;">@login.DisplayName</span>
+                        </div>
+                        <form method="post" asp-page-handler="RemoveLogin">
+                            <input type="hidden" name="provider" value="@login.Name" />
+                            <button type="submit" class="btn btn-secondary" style="width: auto; padding: 6px 12px; font-size: 12px; color: #ef4444; border-color: #fee2e2;">Disconnect</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
+
+        @if (Model.OtherLogins.Any())
+        {
+            <h3 style="font-size: 14px; font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;">Available Providers</h3>
+            <div style="display: grid; gap: 12px;">
+                @foreach (var login in Model.OtherLogins)
+                {
+                    <form method="post" asp-page-handler="LinkLogin">
+                        <input type="hidden" name="provider" value="@login.Name" />
+                        <button type="submit" class="provider-btn" style="width: 100%;">
+                            <i class="fab fa-@login.Name.ToLower()"></i>
+                            Link @login.DisplayName
+                        </button>
+                    </form>
+                }
+            </div>
+        }
+
+        <div class="mt-4" style="margin-top: 32px; border-top: 1px solid #e2e8f0; padding-top: 24px;">
+            <a href="/Manage/Index" class="btn btn-secondary" style="font-size: 14px;">
+                <i class="fas fa-arrow-left"></i> Back to Settings
+            </a>
+        </div>
+    </div>
+</div>

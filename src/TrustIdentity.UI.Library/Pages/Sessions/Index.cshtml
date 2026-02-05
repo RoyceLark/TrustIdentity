@@ -1,0 +1,84 @@
+@page
+@model TrustIdentity.UI.Pages.Sessions.IndexModel
+@{
+    ViewData["Title"] = "Active Sessions";
+}
+
+<div class="auth-card wide">
+    <div class="auth-header" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+        <div class="auth-logo">
+            <i class="fas fa-desktop"></i>
+        </div>
+        <h1>Active Sessions</h1>
+        <p>Monitor and manage your active login sessions across devices</p>
+    </div>
+
+    <div class="auth-body">
+        @if (!Model.Sessions.Any())
+        {
+            <div class="alert alert-info border-0 shadow-sm p-5 text-center" style="display: flex; flex-direction: column; align-items: center;">
+                <i class="fas fa-ghost" style="font-size: 32px; margin-bottom: 16px;"></i>
+                <h4 style="font-size: 18px; margin-bottom: 8px;">No other sessions found</h4>
+                <p style="margin: 0; opacity: 0.8;">You are only signed in on this current browser.</p>
+            </div>
+        }
+        else
+        {
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+                @foreach (var session in Model.Sessions)
+                {
+                    <div class="session-card" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; transition: all 0.3s ease; display: flex; flex-direction: column;">
+                        <div style="padding: 24px; flex-grow: 1;">
+                            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                                <div style="width: 48px; height: 48px; border-radius: 50%; background: #e0e7ff; color: #6366f1; display: flex; align-items: center; justify-content: center; margin-right: 16px;">
+                                    <i class="fas fa-laptop" style="font-size: 20px;"></i>
+                                </div>
+                                <div style="overflow: hidden;">
+                                    <h5 style="margin: 0; font-size: 15px; font-weight: 700; color: #0f172a;">Active Session</h5>
+                                    <div style="font-size: 11px; color: #64748b; font-family: monospace;">ID: @session.SessionId.Substring(0, 8)...</div>
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; gap: 12px; font-size: 13px;">
+                                <div>
+                                    <div style="font-weight: 700; color: #475569; font-size: 11px; text-transform: uppercase; margin-bottom: 2px;">Last Activity</div>
+                                    <div style="color: #1e293b;">@session.Created.ToString("MMM dd, HH:mm")</div>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 700; color: #475569; font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">Authorized Apps</div>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                                        @foreach (var clientId in session.ClientIds)
+                                        {
+                                            <span style="background: white; border: 1px solid #e2e8f0; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 600;">@clientId</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="padding: 16px; background: #f1f5f9; border-top: 1px solid #e2e8f0; border-radius: 0 0 16px 16px;">
+                            <form method="post" asp-page-handler="Revoke">
+                                <input type="hidden" name="sessionId" value="@session.SessionId" />
+                                <button type="submit" class="btn btn-secondary" style="color: #ef4444; border-color: #fee2e2; font-size: 13px; font-weight: 700;">
+                                    <i class="fas fa-power-off" style="margin-right: 8px;"></i> Terminate Session
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="auth-footer">
+        <a href="/" class="link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+    </div>
+</div>
+
+<style>
+    .session-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+        border-color: var(--primary);
+    }
+</style>
